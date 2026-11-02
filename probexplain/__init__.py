@@ -46,7 +46,7 @@ def explain(model, x, k, method=None, X_background=None, **kwargs):
     """Explain the prediction of ``model`` on instance ``x`` with an explanation of size <= k.
 
     method: decision tree "gd" (default) or "ga";
-            tree ensemble "ga" (default) or "gd";
+            tree ensemble "ga" (default), "gd" or "majority";
             black box: ignored (BE).
     Other keyword arguments go to the explainer constructor (see make_explainer)."""
     explainer = make_explainer(model, X_background, **kwargs)

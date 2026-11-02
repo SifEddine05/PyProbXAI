@@ -1,6 +1,6 @@
 """Result object returned by every explainer."""
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any, List, Optional
 
 import numpy as np
 
@@ -27,8 +27,10 @@ class Explanation:
     features : list     indices of the original features involved
     conditions : list   human readable conditions (x[f] > t, intervals, categorical values...)
     error : float       error of the explanation: probability (UAI 2023), weighted pseudo-probability
-                        (k-pseudo) or Monte-Carlo estimate (BE) that the prediction changes when the
-                        features outside the explanation vary
+                        (k-pseudo), average of the tree errors (majority) or Monte-Carlo estimate (BE)
+                        that the prediction changes when the features outside the explanation vary
+    n_sufficient_trees : int or None   majority only: number of trees with error 0
+    n_trees : int or None              majority only: number of trees of the ensemble
     """
     method: str
     prediction: Any
@@ -36,6 +38,8 @@ class Explanation:
     features: List[int]
     conditions: List[str]
     error: float
+    n_sufficient_trees: Optional[int] = None
+    n_trees: Optional[int] = None
 
     @property
     def size(self):
@@ -48,5 +52,7 @@ class Explanation:
     def __str__(self):
         lines = [f"Explanation [{self.method}] of prediction {self.prediction!r}",
                  f"  size = {self.size}, error = {self.error:.6g} (precision {self.precision:.6g})"]
+        if self.n_sufficient_trees is not None:
+            lines.append(f"  trees with error 0: {self.n_sufficient_trees} / {self.n_trees}")
         lines += [f"  * {c}" for c in self.conditions] or ["  (empty explanation)"]
         return "\n".join(lines)

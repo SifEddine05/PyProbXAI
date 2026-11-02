@@ -1,4 +1,5 @@
-"""Example 2 - Random forest on Adult: k-pseudo-probable explanations (GA and GD).
+"""Example 2 - Random forest on Adult: k-pseudo-probable explanations (GA and GD) and
+approximate majoritary explanations ("majority").
 
 Run:  python examples/example_2_random_forest_adult.py
 """
@@ -33,3 +34,4 @@ for i in range(N_INSTANCES):
     print(f"========== instance {i} (true class {y_test.iloc[i]})")
     for method in ["ga", "gd"]:
         print(ex.explain(x, k=K, method=method), "\n")
+    print(ex.explain(x, method="majority"), "\n")   # no size limit: stops at half of the trees
