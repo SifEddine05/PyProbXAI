@@ -151,30 +151,11 @@ The explanation is chosen among the conditions of the direct reason: the union o
 
 #### Majority explanations (random forests only)
 
-A **majoritary explanation** is a set of conditions that is enough, on its own, for at least half of the trees to predict the class of `x`, whatever the values of the other features. The vote of the forest then stays the same.
-
-`method="majority"` approximates such an explanation with the greedy ascent of the UAI 2023 article [1]. It adds conditions one by one and stops as soon as half of the trees have an error of 0. This method only exists for random forests (`TreeEnsembleExplainer`), since it relies on the vote of the trees. It is not available for a single decision tree or for black-box models.
+`method="majority"` gives a set of conditions that is enough for at least half of the trees to predict the class of `x`, whatever the other features. It uses the greedy ascent of [1] and is only available for random forests.
 
 ```python
-ex = TreeEnsembleExplainer(rf, feature_names=X.columns)
-e = ex.explain(x, method="majority")
-print(e.n_sufficient_trees, "/", e.n_trees)      # trees with error 0
+e = TreeEnsembleExplainer(rf, feature_names=X.columns).explain(x, method="majority")
 ```
-
-```
-Explanation [uai-majority] of prediction '<=50K'
-  size = 15, error = 0.0765625 (precision 0.923438)
-  trees with error 0: 10 / 20
-  * education > 6.5
-  * educational-num <= 12.5
-  * marital-status <= 2.5
-  * 0.5 < relationship <= 4.5
-  * capital-gain <= 5096
-  * capital-loss <= 1748
-  * hours-per-week <= 41.5
-```
-
-The reported `error` is the average, over all the trees, of their UAI 2023 errors. These explanations are usually longer than those of GA and GD, since they must hold exactly for half of the trees.
 
 **`BlackBoxExplainer(model, X_background, categorical_features=(), n_bins=3, eta=0.1, delta=0.05, feature_names=None, cat_decoders=None, random_state=None)`, then `.explain(x, k)`**
 
