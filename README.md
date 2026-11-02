@@ -9,8 +9,8 @@ The library brings together the methods of three articles:
 | Article | Models | Explainer |
 |---|---|---|
 | **[1] UAI 2023**: probable explanations of decision trees, greedy descent (GD) and greedy ascent (GA). The error is computed exactly, uniform over the Boolean variables of the tree. | `DecisionTreeClassifier` | `DecisionTreeExplainer` |
-| **[2] k-pseudo-probable explanations** for weighted tree ensembles: GA (with a curvature-based stopping rule) and GD. The error is the average, over the trees, of their errors weighted by `1 - P_i` (`P_i`: confidence of tree `i` on `x`). | `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | `TreeEnsembleExplainer` |
-| **[3] BE (BanditExplain)**: explanations for any black-box model, with an (η, δ)-PAC guarantee. The error is estimated by Monte-Carlo sampling on background data, and only `predict` is used. | any model with `predict` (neural networks, CNN, SVM, boosting, pipelines...) | `BlackBoxExplainer` |
+|  **[2] k-pseudo-probable explanations** for weighted tree ensembles: GA (with a curvature-based stopping rule) and GD. The error is the average, over the trees, of their errors weighted by `1 - P_i` (`P_i`: confidence of tree `i` on `x`). | `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | `TreeEnsembleExplainer` |
+| **[3] BE (BanditExplain)**: explanations for any black-box model, with an (η, δ)-PAC guarantee. The error is estimated by Monte-Carlo sampling on background data, and only `predict` is used. | any model with `predict` (neural networks, CNN, boosting ...) | `BlackBoxExplainer` |
 
 The tree ensemble explainer also has a **majority** method, which approximates majoritary explanations with the greedy ascent of [1] (see [Majority explanations](#majority-explanations-for-tree-ensembles)).
 
@@ -51,13 +51,13 @@ Requires Python >= 3.9. The library only depends on `numpy` and `scikit-learn`.
 **From GitHub.** Use this to use the library in your own code:
 
 ```bash
-pip install git+https://github.com/.../probexplain.git
+pip install git+https://github.com/SifEddine05/probexplain.git
 ```
 
 **From a clone.** Use this to get the code and the examples:
 
 ```bash
-git clone https://github.com/.../probexplain.git
+git clone https://github.com/SifEddine05/probexplain.git
 cd probexplain
 python -m venv .venv
 .venv\Scripts\activate          # Windows   (Linux / macOS: source .venv/bin/activate)
@@ -90,6 +90,7 @@ print(e)
 | `DecisionTreeClassifier` | UAI 2023 | `"gd"` (default) or `"ga"` |
 | `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | k-pseudo | `"ga"` (default), `"gd"` or `"majority"` |
 | any other model | BE | ignored; `X_background` is required |
+
 
 ```python
 e = explain(decision_tree, x, k=4, method="ga", feature_names=X.columns)
