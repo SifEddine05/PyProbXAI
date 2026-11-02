@@ -12,7 +12,7 @@ The library brings together the methods of three articles:
 | **[2] k-pseudo-probable explanations** for weighted tree ensembles: GA (with a curvature-based stopping rule) and GD. The error is the average, over the trees, of their errors weighted by `1 - P_i` (`P_i`: confidence of tree `i` on `x`). | `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | `TreeEnsembleExplainer` |
 | **[3] BE (BanditExplain)**: explanations for any black-box model, with an (η, δ)-PAC guarantee. The error is estimated by Monte-Carlo sampling on background data, and only `predict` is used. | any model with `predict` (neural networks, CNN, SVM, boosting, pipelines...) | `BlackBoxExplainer` |
 
-The tree ensemble explainer also has a **majority** method, which approximates majoritary explanations with the greedy ascent of [1] (see [Majority explanations](#majority-explanations-for-tree-ensembles)).
+For random forests, the tree ensemble explainer also has a **majority** method, which approximates majoritary explanations with the greedy ascent of [1] (see [Majority explanations](#majority-explanations-random-forests-only)).
 
 **References**
 
@@ -131,29 +131,25 @@ e = ex.explain(x, k=4)
 |---|---|
 | `method` | `"gd"`: greedy descent; starts from the path of `x` in the tree and removes conditions. `"ga"`: greedy ascent; starts from the empty set and adds conditions. |
 
-**`TreeEnsembleExplainer(model, feature_names=None)`, then `.explain(x, k=None, method="ga", min_trees=None)`**
+**`TreeEnsembleExplainer(model, feature_names=None)`, then `.explain(x, k=None, method="ga")`**
 
 | Parameter | Meaning |
 |---|---|
 | `method` | `"ga"` (greedy ascent), `"gd"` (greedy descent) or `"majority"` (see below) |
 | `k` | optional for this explainer: no size limit when `None` |
-| `min_trees` | `"majority"` only: number of trees that must have error 0 to stop. Default: half of the trees, rounded up. Use `len(model.estimators_) // 2 + 1` for a strict majority. |
 
 The explanation is chosen among the conditions of the direct reason: the union of the paths of the trees that vote for the prediction.
 
-#### Majority explanations for tree ensembles
+#### Majority explanations (random forests only)
 
-`method="majority"` approximates a **majoritary explanation**: a set of conditions `S` that implies the prediction `c` of at least half of the trees, so that the vote stays in favour of `c` whatever the values of the other features.
+A **majoritary explanation** is a set of conditions that is enough, on its own, for at least half of the trees to predict the class of `x`, whatever the values of the other features. The vote of the forest then stays the same.
 
-- Each tree `T_i` gets the error of the UAI 2023 article [1], without weight: the probability, under the uniform distribution on the Boolean variables, that `T_i` does not predict `c` when `S` is fixed. This error is 0 exactly when `S` implies `T_i(x') = c` for every `x'` that satisfies `S`.
-- The greedy ascent of [1] starts from the empty set. At each step, it adds the condition of the direct reason that most reduces the sum of the errors of the trees voting for `c` that do not have error 0 yet. The trees voting for another class can never reach error 0, because `S` only contains conditions satisfied by `x`.
-- The ascent **stops as soon as `min_trees` trees (by default half of the trees) have error 0**, or when the size reaches `k`. Adding a condition never brings an error back above 0, so the number of trees with error 0 only grows.
+`method="majority"` approximates such an explanation with the greedy ascent of the UAI 2023 article [1]. It adds conditions one by one and stops as soon as half of the trees have an error of 0. This method only exists for random forests (`TreeEnsembleExplainer`), since it relies on the vote of the trees. It is not available for a single decision tree or for black-box models.
 
 ```python
 ex = TreeEnsembleExplainer(rf, feature_names=X.columns)
-e = ex.explain(x, method="majority")             # stops at half of the trees
-e = ex.explain(x, method="majority", min_trees=11, k=30)
-print(e.n_sufficient_trees, "/", e.n_trees)
+e = ex.explain(x, method="majority")
+print(e.n_sufficient_trees, "/", e.n_trees)      # trees with error 0
 ```
 
 ```
@@ -169,7 +165,7 @@ Explanation [uai-majority] of prediction '<=50K'
   * hours-per-week <= 41.5
 ```
 
-The reported `error` is the average, over all the trees, of their UAI 2023 errors. A warning is raised when fewer than `min_trees` trees predict `c` on `x` (the threshold cannot be reached), or when the size limit `k` stops the ascent first. The explanations are usually larger than those of GA and GD, since they must hold exactly for half of the trees. scikit-learn forests vote by averaging the class probabilities, not by majority of the trees, so the guarantee on the prediction of the forest is an approximation.
+The reported `error` is the average, over all the trees, of their UAI 2023 errors. These explanations are usually longer than those of GA and GD, since they must hold exactly for half of the trees.
 
 **`BlackBoxExplainer(model, X_background, categorical_features=(), n_bins=3, eta=0.1, delta=0.05, feature_names=None, cat_decoders=None, random_state=None)`, then `.explain(x, k)`**
 
