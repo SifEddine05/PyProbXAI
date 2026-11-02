@@ -12,11 +12,13 @@ The library brings together the methods of three articles:
 |  **[2] k-pseudo-probable explanations** for weighted tree ensembles: GA (with a curvature-based stopping rule) and GD. The error is the average, over the trees, of their errors weighted by `1 - P_i` (`P_i`: confidence of tree `i` on `x`). | `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | `TreeEnsembleExplainer` |
 | **[3] BE (BanditExplain)**: explanations for any black-box model, with an (η, δ)-PAC guarantee. The error is estimated by Monte-Carlo sampling on background data, and only `predict` is used. | any model with `predict` (neural networks, CNN, boosting ...) | `BlackBoxExplainer` |
 
+The tree ensemble explainer also has a **majority** method, which approximates majoritary explanations with the greedy ascent of [1] (see [Majority explanations](#majority-explanations-for-tree-ensembles)).
+
 **References**
 
 1. L. Bounia, F. Koriche. *Approximating Probabilistic Explanations via Supermodular Minimization*. Proceedings of the 39th Conference on Uncertainty in Artificial Intelligence (UAI 2023), PMLR 216.
 2. L. Bounia. *k-Pseudo-Probable Path Explanations for Weighted Tree-Based Ensembles: Bridging Interpretability and Computational Efficiency*. In Joint European Conference on Machine Learning and Knowledge Discovery in Databases (ECML PKDD 2026), pp. 39-57. Springer Nature Switzerland, 2026.
-3. S. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits*.
+3. S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits*.
 
 ## Project organization
 
@@ -28,7 +30,7 @@ probexplain/
 ├── probexplain/                # the library
 │   ├── __init__.py             # explain() and make_explainer(): choose the explainer from the model
 │   ├── tree.py                 # [1] UAI 2023: DecisionTreeExplainer (GD, GA)
-│   ├── ensemble.py             # [2] k-pseudo: TreeEnsembleExplainer (GA, GD)
+│   ├── ensemble.py             # [2] k-pseudo: TreeEnsembleExplainer (GA, GD, majority)
 │   ├── blackbox.py             # [3] BE: BlackBoxExplainer
 │   ├── explanation.py          # Explanation: the result returned by every explainer
 │   ├── _boolean.py             # binarization of the trees (thresholds -> Boolean variables)
@@ -86,8 +88,9 @@ print(e)
 | Model | Method used | `method` |
 |---|---|---|
 | `DecisionTreeClassifier` | UAI 2023 | `"gd"` (default) or `"ga"` |
-| `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | k-pseudo | `"ga"` (default) or `"gd"` |
-| any other model | BE | `X_background` is required |
+| `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | k-pseudo | `"ga"` (default), `"gd"` or `"majority"` |
+| any other model | BE | ignored; `X_background` is required |
+
 
 ```python
 e = explain(decision_tree, x, k=4, method="ga", feature_names=X.columns)
@@ -129,13 +132,45 @@ e = ex.explain(x, k=4)
 |---|---|
 | `method` | `"gd"`: greedy descent; starts from the path of `x` in the tree and removes conditions. `"ga"`: greedy ascent; starts from the empty set and adds conditions. |
 
-**`TreeEnsembleExplainer(model, feature_names=None)`, then `.explain(x, k, method="ga")`**
+**`TreeEnsembleExplainer(model, feature_names=None)`, then `.explain(x, k=None, method="ga", min_trees=None)`**
 
 | Parameter | Meaning |
 |---|---|
-| `method` | `"ga"` (greedy ascent) or `"gd"` (greedy descent) |
+| `method` | `"ga"` (greedy ascent), `"gd"` (greedy descent) or `"majority"` (see below) |
+| `k` | optional for this explainer: no size limit when `None` |
+| `min_trees` | `"majority"` only: number of trees that must have error 0 to stop. Default: half of the trees, rounded up. Use `len(model.estimators_) // 2 + 1` for a strict majority. |
 
 The explanation is chosen among the conditions of the direct reason: the union of the paths of the trees that vote for the prediction.
+
+#### Majority explanations for tree ensembles
+
+`method="majority"` approximates a **majoritary explanation**: a set of conditions `S` that implies the prediction `c` of at least half of the trees, so that the vote stays in favour of `c` whatever the values of the other features.
+
+- Each tree `T_i` gets the error of the UAI 2023 article [1], without weight: the probability, under the uniform distribution on the Boolean variables, that `T_i` does not predict `c` when `S` is fixed. This error is 0 exactly when `S` implies `T_i(x') = c` for every `x'` that satisfies `S`.
+- The greedy ascent of [1] starts from the empty set. At each step, it adds the condition of the direct reason that most reduces the sum of the errors of the trees voting for `c` that do not have error 0 yet. The trees voting for another class can never reach error 0, because `S` only contains conditions satisfied by `x`.
+- The ascent **stops as soon as `min_trees` trees (by default half of the trees) have error 0**, or when the size reaches `k`. Adding a condition never brings an error back above 0, so the number of trees with error 0 only grows.
+
+```python
+ex = TreeEnsembleExplainer(rf, feature_names=X.columns)
+e = ex.explain(x, method="majority")             # stops at half of the trees
+e = ex.explain(x, method="majority", min_trees=11, k=30)
+print(e.n_sufficient_trees, "/", e.n_trees)
+```
+
+```
+Explanation [uai-majority] of prediction '<=50K'
+  size = 15, error = 0.0765625 (precision 0.923438)
+  trees with error 0: 10 / 20
+  * education > 6.5
+  * educational-num <= 12.5
+  * marital-status <= 2.5
+  * 0.5 < relationship <= 4.5
+  * capital-gain <= 5096
+  * capital-loss <= 1748
+  * hours-per-week <= 41.5
+```
+
+The reported `error` is the average, over all the trees, of their UAI 2023 errors. A warning is raised when fewer than `min_trees` trees predict `c` on `x` (the threshold cannot be reached), or when the size limit `k` stops the ascent first. The explanations are usually larger than those of GA and GD, since they must hold exactly for half of the trees. scikit-learn forests vote by averaging the class probabilities, not by majority of the trees, so the guarantee on the prediction of the forest is an approximation.
 
 **`BlackBoxExplainer(model, X_background, categorical_features=(), n_bins=3, eta=0.1, delta=0.05, feature_names=None, cat_decoders=None, random_state=None)`, then `.explain(x, k)`**
 
@@ -159,6 +194,7 @@ The explanation is chosen among the conditions of the direct reason: the union o
 | `e.features` | indices of the features used |
 | `e.literals` | the explanation as Boolean literals of the model's binarization |
 | `e.error`, `e.precision` | error of the explanation and `1 - error` |
+| `e.n_sufficient_trees`, `e.n_trees` | `"majority"` only: number of trees with error 0, and number of trees |
 | `e.size` | number of literals |
 
 ## Examples
@@ -177,8 +213,8 @@ Their parameters (`K`, `ETA`, `DELTA`, instances to explain...) are constants at
 
 | Script | Dataset | Model | Explanations | Time (CPU) |
 |---|---|---|---|---|
-| `example_1_decision_tree_adult.py` | Adult | decision tree | UAI 2023, GD and GA | a few seconds |
-| `example_2_random_forest_adult.py` | Adult | random forest (20 trees) | k-pseudo, GA and GD | a few seconds |
+| `example_1_decision_tree_adult.py` | Adult | decision tree (depth 8) | UAI 2023, GD and GA | a few seconds |
+| `example_2_random_forest_adult.py` | Adult | random forest (20 trees, depth 6) | k-pseudo, GA and GD, majority | a few seconds |
 | `example_3_neural_network_adult.py` | Adult | neural network (MLP, 64 neurons) | BE | about 1 min |
 | `example_4_cnn_mnist_heatmap.py` | MNIST, 3 vs 8 | CNN (PyTorch) | BE + heatmaps | about 2 min |
 | `example_5_text_be.py` | 20 Newsgroups, sci.med vs sci.space | neural network (MLP, 32 neurons) | BE on words | about 20 s |
