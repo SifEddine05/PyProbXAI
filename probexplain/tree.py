@@ -13,6 +13,7 @@ import numpy as np
 
 from ._boolean import Binarization, BooleanTree
 from ._counting import M_s, W_s
+from ._models import check_model
 from .explanation import Explanation
 
 
@@ -74,6 +75,7 @@ class DecisionTreeExplainer:
     METHODS = ("gd", "ga")
 
     def __init__(self, model, feature_names=None):
+        check_model(model, "DecisionTreeExplainer")
         self.model = model
         self.feature_names = list(feature_names) if feature_names is not None else None
         self.bina = Binarization()
@@ -91,6 +93,9 @@ class DecisionTreeExplainer:
             S = approx_descent(phi, R_d, n, k)
         elif method == "ga":
             S = approx_ascent(phi, R_d, n, k)
+        elif method == "majority":
+            raise ValueError("method 'majority' is only for random forests: "
+                             "use TreeEnsembleExplainer with a random forest")
         else:
             raise ValueError(f"unknown method {method!r}, expected one of {self.METHODS}")
 

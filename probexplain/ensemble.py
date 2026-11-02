@@ -21,6 +21,7 @@ import numpy as np
 
 from ._boolean import Binarization, BooleanTree
 from ._counting import M_s, W_s, log
+from ._models import check_model
 from .explanation import Explanation, predict_one
 
 
@@ -148,6 +149,7 @@ class TreeEnsembleExplainer:
     METHODS = ("ga", "gd", "majority")
 
     def __init__(self, model, feature_names=None):
+        check_model(model, "TreeEnsembleExplainer")
         self.model = model
         self.feature_names = list(feature_names) if feature_names is not None else None
         self.bina = Binarization()

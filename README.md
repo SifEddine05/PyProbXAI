@@ -115,6 +115,15 @@ ex = BlackBoxExplainer(nn, X_train, categorical_features=[...], n_bins=3, eta=0.
 e = ex.explain(x, k=4)
 ```
 
+The explainer must be adapted to the model. Otherwise, an error tells you which one to use:
+
+```
+TypeError: DecisionTreeExplainer is not adapted to a RandomForestClassifier: use TreeEnsembleExplainer
+instead (or probexplain.explain, which chooses the explainer from the model)
+```
+
+`BlackBoxExplainer` works with any model, so with a decision tree or a random forest it only shows a warning that recommends the explainer adapted to the model. `method="majority"` is only for random forests: with `DecisionTreeExplainer`, it raises an error that asks you to use `TreeEnsembleExplainer`.
+
 ### Parameters
 
 **Common to all explainers**
