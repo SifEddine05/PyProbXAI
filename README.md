@@ -1,249 +1,297 @@
 # probexplain
 
-**probexplain** is a Python library that explains the predictions of classifiers with **probable explanations**.
+**A Python library for generating probable explanations of machine learning predictions.**
 
-A probable explanation of the prediction of a model on an instance `x` is a small set of conditions on the features of `x`, at most `k` of them. When these conditions are fixed and the other features vary, the prediction stays the same with high probability. The **error** of an explanation is the probability that the prediction changes. Its **precision** is `1 - error`.
+`probexplain` is a Python explainability library that generates concise explanations for individual predictions. It integrates three complementary approaches to explain decision trees, tree ensembles, and black-box models, including neural networks and CNNs.
 
-The library brings together the methods of three articles:
+The library provides a unified interface to generate explanations without requiring users to implement the underlying algorithms.
 
-| Article | Models | Explainer |
+## 1. Overview
+
+A probable explanation is a small set of feature conditions that preserves the prediction of a classifier with high probability when the remaining features are allowed to vary.
+
+Each explanation is characterized by:
+
+- **Size:** number of selected conditions (at most `k`).
+- **Error:** probability that the prediction changes.
+- **Precision:** probability that the prediction remains unchanged (`1 - error`).
+
+### Architecture
+
+The library integrates three explanation approaches:
+
+```mermaid
+flowchart TB
+    A["User"] --> B["Trained Model + Instance x"]
+    B --> C["probexplain API"]
+    C --> D{"Model type"}
+
+    D -->|"Decision Tree"| E["DecisionTreeExplainer"]
+    D -->|"Tree Ensemble"| F["TreeEnsembleExplainer"]
+    D -->|"Black-box Model"| G["BlackBoxExplainer"]
+
+    E --> E1["UAI 2023: GD / GA"]
+    F --> F1["k-Pseudo: GD / GA / Majority"]
+    G --> G1["BanditExplain"]
+
+    E1 --> H["Explanation"]
+    F1 --> H
+    G1 --> H
+
+    H --> I["Prediction + Conditions + Error + Precision"]
+```
+
+### Available explainers
+
+| Explainer | Supported models | Methods |
 |---|---|---|
-| **[1] UAI 2023**: probable explanations of decision trees, greedy descent (GD) and greedy ascent (GA). The error is computed exactly, uniform over the Boolean variables of the tree. | `DecisionTreeClassifier` | `DecisionTreeExplainer` |
-|  **[2] k-pseudo-probable explanations** for weighted tree ensembles: GA (with a curvature-based stopping rule) and GD. The error is the average, over the trees, of their errors weighted by `1 - P_i` (`P_i`: confidence of tree `i` on `x`). | `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | `TreeEnsembleExplainer` |
-| **[3] BE (BanditExplain)**: explanations for any black-box model, with an (η, δ)-PAC guarantee. The error is estimated by Monte-Carlo sampling on background data, and only `predict` is used. | any model with `predict` (neural networks, CNN, boosting ...) | `BlackBoxExplainer` |
+| `DecisionTreeExplainer` | Decision trees | GD, GA |
+| `TreeEnsembleExplainer` | Random forests, Extra Trees, Bagging | GD, GA, Majority |
+| `BlackBoxExplainer` | Neural networks, CNNs, boosting and other classifiers | BanditExplain |
 
-The tree ensemble explainer also has a **majority** method, which approximates majoritary explanations with the greedy ascent of [1] (see [Majority explanations](#majority-explanations-for-tree-ensembles)).
+**Main features:**
+- Unified API for different model families.
+- Greedy Descent and Greedy Ascent algorithms.
+- Exact error computation for individual decision trees.
+- PAC-based error estimation for black-box models.
+- Majority explanations for tree ensembles.
+- Support for tabular, image and text classification.
 
-**References**
+## 2. Installation
 
-1. L. Bounia, F. Koriche. *Approximating Probabilistic Explanations via Supermodular Minimization*. Proceedings of the 39th Conference on Uncertainty in Artificial Intelligence (UAI 2023), PMLR 216.
-2. L. Bounia. *k-Pseudo-Probable Path Explanations for Weighted Tree-Based Ensembles: Bridging Interpretability and Computational Efficiency*. In Joint European Conference on Machine Learning and Knowledge Discovery in Databases (ECML PKDD 2026), pp. 39-57. Springer Nature Switzerland, 2026.
-3. S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits*.
+**Requirements:** Python >= 3.9, NumPy and Scikit-learn.
 
-## Project organization
-
-```
-probexplain/
-├── README.md
-├── pyproject.toml              # package description (dependencies: numpy, scikit-learn)
-├── requirements-examples.txt   # extra dependencies, only to run the examples
-├── probexplain/                # the library
-│   ├── __init__.py             # explain() and make_explainer(): choose the explainer from the model
-│   ├── tree.py                 # [1] UAI 2023: DecisionTreeExplainer (GD, GA)
-│   ├── ensemble.py             # [2] k-pseudo: TreeEnsembleExplainer (GA, GD, majority)
-│   ├── blackbox.py             # [3] BE: BlackBoxExplainer
-│   ├── explanation.py          # Explanation: the result returned by every explainer
-│   ├── _boolean.py             # binarization of the trees (thresholds -> Boolean variables)
-│   └── _counting.py            # exact model counting on orthogonal DNFs
-└── examples/                   # executable examples
-    ├── data/adult.csv
-    ├── example_1_decision_tree_adult.py
-    ├── example_2_random_forest_adult.py
-    ├── example_3_neural_network_adult.py
-    ├── example_4_cnn_mnist_heatmap.py
-    └── example_5_text_be.py
-```
-
-## Installation
-
-Requires Python >= 3.9. The library only depends on `numpy` and `scikit-learn`.
-
-**From GitHub.** Use this to use the library in your own code:
+Install directly from GitHub:
 
 ```bash
 pip install git+https://github.com/SifEddine05/probexplain.git
 ```
 
-**From a clone.** Use this to get the code and the examples:
+Alternatively, clone the repository:
 
 ```bash
 git clone https://github.com/SifEddine05/probexplain.git
 cd probexplain
+
 python -m venv .venv
-.venv\Scripts\activate          # Windows   (Linux / macOS: source .venv/bin/activate)
+```
+
+Activate the environment:
+
+```bash
+# Windows
+.venv\Scripts\activate
+
+# Linux / macOS
+source .venv/bin/activate
+```
+
+Install the library:
+
+```bash
 pip install -e .
 ```
 
-**Dependencies of the examples.** `requirements-examples.txt` (pandas, matplotlib, torch) is needed **only to run the provided examples**. The library does not need it:
+To run the examples, install the additional dependencies:
 
 ```bash
 pip install -r requirements-examples.txt
 ```
 
-`torch` is only used by the CNN example. Its CPU build is lighter: `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
+## 3. Quick Start
 
-## Usage
-
-### `explain`: the explainer is chosen from the model
+The simplest way to generate an explanation is to use `explain()`. The library automatically selects the appropriate explainer based on the model type.
 
 ```python
 from probexplain import explain
 
-e = explain(model, x, k=4)          # model: fitted classifier, x: one instance (1-D array)
+# model: fitted classification model
+# x: instance to explain
+e = explain(
+    model,
+    x,
+    k=4,
+    feature_names=feature_names
+)
+
 print(e)
 ```
 
-`explain` picks the method from the type of the model:
+For black-box models, provide a background dataset:
 
-| Model | Method used | `method` |
-|---|---|---|
-| `DecisionTreeClassifier` | UAI 2023 | `"gd"` (default) or `"ga"` |
-| `RandomForestClassifier`, `ExtraTreesClassifier`, `BaggingClassifier` of trees | k-pseudo | `"ga"` (default), `"gd"` or `"majority"` |
-| any other model | BE | ignored; `X_background` is required |
+```python
+e = explain(
+    neural_network,
+    x,
+    k=4,
+    X_background=X_train,
+    eta=0.1,
+    delta=0.05,
+    random_state=42
+)
+```
+
+Users can also instantiate an explainer directly. This is particularly useful when explaining multiple instances with the same model, since the model is analyzed only once.
 
 
 ```python
-e = explain(decision_tree, x, k=4, method="ga", feature_names=X.columns)
-e = explain(random_forest, x, k=4, method="gd")
-e = explain(neural_net, x, k=4, X_background=X_train, categorical_features=["workclass", ...],
-            eta=0.1, delta=0.05, random_state=0)
+from probexplain import (
+    DecisionTreeExplainer,
+    TreeEnsembleExplainer,
+    BlackBoxExplainer
+)
+
+# Decision tree
+explainer = DecisionTreeExplainer(model, feature_names=feature_names)
+e = explainer.explain(x, k=4, method="gd")
+
+# Tree ensemble
+explainer = TreeEnsembleExplainer(model, feature_names=feature_names)
+e = explainer.explain(x, k=4, method="ga")
+
+# Black-box model
+explainer = BlackBoxExplainer(
+    model, X_train, eta=0.1, delta=0.05
+)
+e = explainer.explain(x, k=4)
 ```
 
-### Choosing the explainer yourself
+## 4. Explanation Methods
 
-You can also build one of the three explainers directly. It is faster when you explain many instances, because the model is analysed only once:
+### Decision trees — UAI 2023
+
+`DecisionTreeExplainer` implements two greedy algorithms:
+
+- **GD (Greedy Descent):** starts from the decision path of the instance and removes conditions.
+- **GA (Greedy Ascent):** starts from an empty explanation and progressively adds conditions.
+
+The explanation error is computed exactly under a uniform distribution over the Boolean variables representing the tree.
+
+### Tree ensembles — k-Pseudo-Probable Explanations
+
+`TreeEnsembleExplainer` supports:
+
+- **GD:** removes conditions from the direct reason.
+- **GA:** progressively adds conditions using a curvature-based stopping rule.
+- **Majority:** available only for Random Forest models. It seeks conditions sufficient to ensure that at least a specified number of trees predict the original class.
+
+The ensemble explanation error is based on the weighted errors of its individual trees.
+
+Example:
 
 ```python
-from probexplain import DecisionTreeExplainer, TreeEnsembleExplainer, BlackBoxExplainer
-
-ex = DecisionTreeExplainer(dt, feature_names=X.columns)
-e = ex.explain(x, k=3, method="gd")
-
-ex = TreeEnsembleExplainer(rf, feature_names=X.columns)
-e = ex.explain(x, k=4, method="ga")
-
-ex = BlackBoxExplainer(nn, X_train, categorical_features=[...], n_bins=3, eta=0.1, delta=0.05)
-e = ex.explain(x, k=4)
+e = explainer.explain(x, method="majority")
 ```
 
-### Parameters
+### Black-box models — BanditExplain
 
-**Common to all explainers**
+`BlackBoxExplainer` uses Monte Carlo sampling and multi-armed bandit techniques to estimate explanation errors.
 
-| Parameter | Meaning |
+It only requires access to the model's `predict()` method and a background dataset.
+
+Its PAC guarantee is controlled by two parameters:
+
+- `eta`: additive error tolerance.
+- `delta`: probability of failure.
+
+Categorical features can be specified using `categorical_features`, while `cat_decoders` allows their original names to appear in the explanations.
+
+## 5. Parameters
+
+The following table summarizes the main parameters, their expected types, descriptions, and usage examples.
+
+| Parameter | Type | Description | Example |
+|---|---|---|---|
+| `k` | `int` | Maximum number of conditions in the explanation. | `k=4` |
+| `method` | `str` | Explanation algorithm: `"gd"`, `"ga"` or `"majority"` where supported. | `method="gd"` |
+| `feature_names` | `list[str]` | Names used to display explanation conditions. | `feature_names=["age", "income"]` |
+| `eta` | `float` | Additive error tolerance for the PAC guarantee. | `eta=0.1` |
+| `delta` | `float` | Probability of failure for the PAC guarantee. | `delta=0.05` |
+| `X_background` | `array-like` | Background dataset used to estimate explanation errors. | `X_background=X_train` |
+| `categorical_features` | `list[int]` | Indices of categorical features. | `categorical_features=[1, 3]` |
+| `n_bins` | `int` | Number of quantile bins used to discretize numerical features. | `n_bins=3` |
+| `cat_decoders` | `dict` | Mapping used to display original categorical values. | `cat_decoders={1: {0: "male", 1: "female"}}` |
+| `random_state` | `int` or `None` | Controls random sampling for reproducibility. | `random_state=42` |
+
+For black-box models, `eta` and `delta` default to `0.1` and `0.05`, respectively. The default number of quantile bins is `3`.
+
+## 6. Understanding the Results
+
+All explainers return an `Explanation` object.
+
+| Attribute | Description |
 |---|---|
-| `x` | the instance to explain: a 1-D array of numeric values. Categorical columns must be encoded as integer codes. |
-| `k` | maximal size of the explanation (number of conditions) |
-| `feature_names` | names of the features, used to print the conditions |
+| `e.prediction` | Predicted class. |
+| `e.conditions` | Human-readable explanation conditions. |
+| `e.features` | Indices of selected features. |
+| `e.error` | Explanation error. |
+| `e.precision` | Explanation precision (`1 - error`). |
+| `e.size` | Number of selected conditions. |
+| `e.literals` | Boolean representation of the explanation. |
+| `e.n_sufficient_trees` | Number of trees with zero error (majority only). |
+| `e.n_trees` | Total number of trees (majority only). |
 
-**`DecisionTreeExplainer(model, feature_names=None)`, then `.explain(x, k, method="gd")`**
+Example output:
 
-| Parameter | Meaning |
-|---|---|
-| `method` | `"gd"`: greedy descent; starts from the path of `x` in the tree and removes conditions. `"ga"`: greedy ascent; starts from the empty set and adds conditions. |
-
-**`TreeEnsembleExplainer(model, feature_names=None)`, then `.explain(x, k=None, method="ga", min_trees=None)`**
-
-| Parameter | Meaning |
-|---|---|
-| `method` | `"ga"` (greedy ascent), `"gd"` (greedy descent) or `"majority"` (see below) |
-| `k` | optional for this explainer: no size limit when `None` |
-| `min_trees` | `"majority"` only: number of trees that must have error 0 to stop. Default: half of the trees, rounded up. Use `len(model.estimators_) // 2 + 1` for a strict majority. |
-
-The explanation is chosen among the conditions of the direct reason: the union of the paths of the trees that vote for the prediction.
-
-#### Majority explanations for tree ensembles
-
-`method="majority"` approximates a **majoritary explanation**: a set of conditions `S` that implies the prediction `c` of at least half of the trees, so that the vote stays in favour of `c` whatever the values of the other features.
-
-- Each tree `T_i` gets the error of the UAI 2023 article [1], without weight: the probability, under the uniform distribution on the Boolean variables, that `T_i` does not predict `c` when `S` is fixed. This error is 0 exactly when `S` implies `T_i(x') = c` for every `x'` that satisfies `S`.
-- The greedy ascent of [1] starts from the empty set. At each step, it adds the condition of the direct reason that most reduces the sum of the errors of the trees voting for `c` that do not have error 0 yet. The trees voting for another class can never reach error 0, because `S` only contains conditions satisfied by `x`.
-- The ascent **stops as soon as `min_trees` trees (by default half of the trees) have error 0**, or when the size reaches `k`. Adding a condition never brings an error back above 0, so the number of trees with error 0 only grows.
-
-```python
-ex = TreeEnsembleExplainer(rf, feature_names=X.columns)
-e = ex.explain(x, method="majority")             # stops at half of the trees
-e = ex.explain(x, method="majority", min_trees=11, k=30)
-print(e.n_sufficient_trees, "/", e.n_trees)
-```
-
-```
-Explanation [uai-majority] of prediction '<=50K'
-  size = 15, error = 0.0765625 (precision 0.923438)
-  trees with error 0: 10 / 20
-  * education > 6.5
-  * educational-num <= 12.5
-  * marital-status <= 2.5
-  * 0.5 < relationship <= 4.5
-  * capital-gain <= 5096
-  * capital-loss <= 1748
-  * hours-per-week <= 41.5
-```
-
-The reported `error` is the average, over all the trees, of their UAI 2023 errors. A warning is raised when fewer than `min_trees` trees predict `c` on `x` (the threshold cannot be reached), or when the size limit `k` stops the ascent first. The explanations are usually larger than those of GA and GD, since they must hold exactly for half of the trees. scikit-learn forests vote by averaging the class probabilities, not by majority of the trees, so the guarantee on the prediction of the forest is an approximation.
-
-**`BlackBoxExplainer(model, X_background, categorical_features=(), n_bins=3, eta=0.1, delta=0.05, feature_names=None, cat_decoders=None, random_state=None)`, then `.explain(x, k)`**
-
-| Parameter | Meaning |
-|---|---|
-| `X_background` | data the free features are sampled from, e.g. the training set |
-| `categorical_features` | indices or column names of the categorical features. The other features are numeric. |
-| `n_bins` | a numeric condition is the quantile interval of `x`, out of `n_bins` intervals |
-| `eta`, `delta` | PAC guarantee: each error is estimated within `eta`, with probability at least `1 - delta`. A smaller `eta` gives more precise but slower explanations (about 1/eta² model queries per estimate). |
-| `cat_decoders` | optional, display only: `{feature index: list of category names}`, to print the categories instead of their integer codes (see below) |
-| `random_state` | seed of the sampling |
-
-**`cat_decoders`.** The library only works with numbers, so categorical columns are encoded as integer codes before training. Without `cat_decoders`, the explanation prints these codes, e.g. `gender = 1`. With `cat_decoders`, it prints the category name, e.g. `gender = Male`.
-
-### Result: `Explanation`
-
-| Attribute | Content |
-|---|---|
-| `e.prediction` | the predicted class being explained |
-| `e.conditions` | the conditions, readable (`age in [37, 90]`, `capital-gain <= 7074`, `gender = Male`...) |
-| `e.features` | indices of the features used |
-| `e.literals` | the explanation as Boolean literals of the model's binarization |
-| `e.error`, `e.precision` | error of the explanation and `1 - error` |
-| `e.n_sufficient_trees`, `e.n_trees` | `"majority"` only: number of trees with error 0, and number of trees |
-| `e.size` | number of literals |
-
-## Examples
-
-Five executable scripts in `examples/`. Run them from the root of the project after installing `requirements-examples.txt`:
-
-```bash
-python examples/example_1_decision_tree_adult.py
-python examples/example_2_random_forest_adult.py
-python examples/example_3_neural_network_adult.py
-python examples/example_4_cnn_mnist_heatmap.py
-python examples/example_5_text_be.py
-```
-
-Their parameters (`K`, `ETA`, `DELTA`, instances to explain...) are constants at the top of each script.
-
-| Script | Dataset | Model | Explanations | Time (CPU) |
-|---|---|---|---|---|
-| `example_1_decision_tree_adult.py` | Adult | decision tree (depth 8) | UAI 2023, GD and GA | a few seconds |
-| `example_2_random_forest_adult.py` | Adult | random forest (20 trees, depth 6) | k-pseudo, GA and GD, majority | a few seconds |
-| `example_3_neural_network_adult.py` | Adult | neural network (MLP, 64 neurons) | BE | about 1 min |
-| `example_4_cnn_mnist_heatmap.py` | MNIST, 3 vs 8 | CNN (PyTorch) | BE + heatmaps | about 2 min |
-| `example_5_text_be.py` | 20 Newsgroups, sci.med vs sci.space | neural network (MLP, 32 neurons) | BE on words | about 20 s |
-
-**Tabular data: Adult** (`examples/data/adult.csv`). The task is to predict whether income is `<=50K` or `>50K` from 14 features: age, education, occupation, marital status, hours per week, capital gain... The categorical columns are encoded as integer codes. The same data is explained by the three methods, which gives explanations like:
-
-```
-Explanation [uai2023-gd] of prediction '<=50K'
-  size = 3, error = 0.25 (precision 0.75)
-  * 0.5 < relationship <= 4.5
-  * capital-gain <= 7074
-```
-
-**Images: MNIST 3 vs 8.** The script follows the notebook `examples/GDB_MNIST_heatmap_CNN (1).ipynb`:
-
-- Each 28x28 image is averaged by blocks of `BLOCK_SIZE` x `BLOCK_SIZE` pixels. With `BLOCK_SIZE = 4`, this gives 49 features.
-- The CNN is trained on this grid of blocks.
-- BE selects at most `K` blocks.
-- The heatmap shows the selected blocks in red on the image. There is one PDF per instance in `examples/results/`.
-
-`BLOCK_SIZE = 2` (196 features) gives finer heatmaps but is much slower.
-
-**Text: 20 Newsgroups, sci.med vs sci.space** (downloaded by scikit-learn the first time). Each of the 50 most discriminant words is a feature, present or absent, and BE explains the predictions of the network with them. The words of the explanation are marked `>>word<<` in the document:
-
-```
+```text
 Explanation [be] of prediction 'sci.space'
-  size = 4, error = 0.142 (precision 0.858)
+
+  size = 4
+  error = 0.142
+  precision = 0.858
+
   * medical = absent
   * satellite = present
   * satellites = present
   * spacecraft = present
 ```
+
+## 7. Demonstrations
+
+The repository provides five executable examples covering different models and data types.
+
+| Example | Dataset | Model | Explanation approach |
+|---|---|---|---|
+| Decision tree | Adult | Decision Tree | UAI 2023 |
+| Random forest | Adult | Random Forest | k-Pseudo |
+| Neural network | Adult | MLP | BanditExplain |
+| Image classification | MNIST (3 vs 8) | CNN | BanditExplain + heatmaps |
+| Text classification | 20 Newsgroups | MLP | BanditExplain on words |
+
+Run an example from the repository root:
+
+```bash
+python examples/example_1_decision_tree_adult.py
+```
+
+The other scripts follow the same naming convention:
+
+```text
+examples/
+├── data/
+│   └── adult.csv
+├── example_1_decision_tree_adult.py
+├── example_2_random_forest_adult.py
+├── example_3_neural_network_adult.py
+├── example_4_cnn_mnist_heatmap.py
+└── example_5_text_be.py
+```
+
+The demonstrations illustrate:
+- **Tabular data:** explanations of income predictions using decision trees, random forests and neural networks.
+- **Images:** highlighted image regions showing the features selected by BanditExplain.
+- **Text:** important words identified in document classification.
+
+## 8. Scientific References
+
+**[1]** L. Bounia and F. Koriche. *Approximating Probabilistic Explanations via Supermodular Minimization*. Proceedings of UAI 2023, PMLR 216.
+
+**[2]** L. Bounia. *k-Pseudo-Probable Path Explanations for Weighted Tree-Based Ensembles: Bridging Interpretability and Computational Efficiency*. ECML PKDD 2026, pp. 39–57. Springer.
+
+**[3]** S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits*.
+
+---
+
+**Repository:** https://github.com/SifEddine05/probexplain
+
+For questions, suggestions, bug reports or contributions, please use the GitHub repository.

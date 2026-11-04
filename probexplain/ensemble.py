@@ -21,6 +21,7 @@ import numpy as np
 
 from ._boolean import Binarization, BooleanTree
 from ._counting import M_s, W_s, log
+from ._models import check_model
 from .explanation import Explanation, predict_one
 
 
@@ -148,6 +149,7 @@ class TreeEnsembleExplainer:
     METHODS = ("ga", "gd", "majority")
 
     def __init__(self, model, feature_names=None):
+        check_model(model, "TreeEnsembleExplainer")
         self.model = model
         self.feature_names = list(feature_names) if feature_names is not None else None
         self.bina = Binarization()
@@ -167,13 +169,13 @@ class TreeEnsembleExplainer:
                 lits.update(dict.fromkeys(t.decision_path(x)))
         return list(lits)
 
-    def explain(self, x, k=None, method="ga", min_trees=None):
+    def explain(self, x, k=None, method="ga"):
         """Explanation of size <= k of the prediction of x, chosen among the literals of the
         direct reason (union of the paths of the trees voting for the prediction).
 
         k is optional (no limit when None). For method="majority", the ascent stops as soon as
-        ``min_trees`` trees (default: half of the trees, rounded up) have error 0; the reported
-        error is then the average of the unweighted UAI 2023 errors of the trees."""
+        half of the trees (rounded up) have error 0; the reported error is then the average of the
+        unweighted UAI 2023 errors of the trees."""
         x = np.asarray(x, dtype=float).ravel()
         prediction = predict_one(self.model, x)
         target = int(np.flatnonzero(self.model.classes_ == prediction)[0])
@@ -186,7 +188,7 @@ class TreeEnsembleExplainer:
 
         if method == "majority":
             m = len(self.trees)
-            q = math.ceil(m / 2) if min_trees is None else int(min_trees)
+            q = math.ceil(m / 2)
             voters = [i for i, t in enumerate(self.trees) if t.predict_index(x) == target]
             if len(voters) < q:
                 warnings.warn(f"only {len(voters)} trees out of {m} predict {prediction!r} on x: "

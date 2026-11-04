@@ -13,6 +13,7 @@ delta_step = delta / (d + 1).
 import numpy as np
 from sklearn.preprocessing import KBinsDiscretizer
 
+from ._models import check_model
 from .explanation import Explanation
 
 
@@ -166,6 +167,7 @@ class BlackBoxExplainer:
 
     def __init__(self, model, X_background, categorical_features=(), n_bins=3, eta=0.1,
                  delta=0.05, feature_names=None, cat_decoders=None, random_state=None):
+        check_model(model, "BlackBoxExplainer")
         columns = getattr(X_background, "columns", None)
         self.feature_names = (list(feature_names) if feature_names is not None
                               else list(map(str, columns)) if columns is not None else None)
