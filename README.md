@@ -193,16 +193,28 @@ Its PAC guarantee is controlled by two parameters:
 - `eta`: additive error tolerance.
 - `delta`: probability of failure.
 
-The guarantee is:
-
-\[
-P(|\widehat{\epsilon}-\epsilon|\leq\eta)
-\geq 1-\delta
-\]
-
 Categorical features can be specified using `categorical_features`, while `cat_decoders` allows their original names to appear in the explanations.
 
-## 5. Understanding the Results
+## 5. Parameters
+
+The following table summarizes the main parameters, their expected types, descriptions, and usage examples.
+
+| Parameter | Type | Description | Example |
+|---|---|---|---|
+| `k` | `int` | Maximum number of conditions in the explanation. | `k=4` |
+| `method` | `str` | Explanation algorithm: `"gd"`, `"ga"` or `"majority"` where supported. | `method="gd"` |
+| `feature_names` | `list[str]` | Names used to display explanation conditions. | `feature_names=["age", "income"]` |
+| `eta` | `float` | Additive error tolerance for the PAC guarantee. | `eta=0.1` |
+| `delta` | `float` | Probability of failure for the PAC guarantee. | `delta=0.05` |
+| `X_background` | `array-like` | Background dataset used to estimate explanation errors. | `X_background=X_train` |
+| `categorical_features` | `list[int]` | Indices of categorical features. | `categorical_features=[1, 3]` |
+| `n_bins` | `int` | Number of quantile bins used to discretize numerical features. | `n_bins=3` |
+| `cat_decoders` | `dict` | Mapping used to display original categorical values. | `cat_decoders={1: {0: "male", 1: "female"}}` |
+| `random_state` | `int` or `None` | Controls random sampling for reproducibility. | `random_state=42` |
+
+For black-box models, `eta` and `delta` default to `0.1` and `0.05`, respectively. The default number of quantile bins is `3`.
+
+## 6. Understanding the Results
 
 All explainers return an `Explanation` object.
 
@@ -233,7 +245,7 @@ Explanation [be] of prediction 'sci.space'
   * spacecraft = present
 ```
 
-## 6. Demonstrations
+## 7. Demonstrations
 
 The repository provides five executable examples covering different models and data types.
 
@@ -269,7 +281,7 @@ The demonstrations illustrate:
 - **Images:** highlighted image regions showing the features selected by BanditExplain.
 - **Text:** important words identified in document classification.
 
-## 7. Scientific References
+## 8. Scientific References
 
 **[1]** L. Bounia and F. Koriche. *Approximating Probabilistic Explanations via Supermodular Minimization*. Proceedings of UAI 2023, PMLR 216.
 
