@@ -21,12 +21,12 @@ class Explanation:
 
     Attributes
     ----------
-    method : str        algorithm used, e.g. "uai2023-ga", "kpseudo-gd", "be"
+    method : str        algorithm used, e.g. "submodular-ga", "k-pseudo-gd", "be"
     prediction : Any    the predicted class being explained
     literals : list     the explanation, as Boolean literals of the model's binarization
     features : list     indices of the original features involved
     conditions : list   human readable conditions (x[f] > t, intervals, categorical values...)
-    error : float       error of the explanation: probability (UAI 2023), weighted pseudo-probability
+    error : float       error of the explanation: probability (Submodular), weighted pseudo-probability
                         (k-pseudo), average of the tree errors (majority) or Monte-Carlo estimate (BE)
                         that the prediction changes when the features outside the explanation vary
     n_sufficient_trees : int or None   majority only: number of trees with error 0

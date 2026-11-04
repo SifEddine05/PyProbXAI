@@ -1,4 +1,4 @@
-"""Probable explanations for decision trees (UAI 2023).
+"""Probable explanations for decision trees (Submodular).
 
 The error of a term S (set of literals of the instance) is the probability, under the uniform
 distribution on the Boolean variables, that the tree does not predict the class of x when S is
@@ -66,7 +66,7 @@ def approx_ascent(phi, I_s, n, k=None):
 
 
 class DecisionTreeExplainer:
-    """Probable explanations (UAI 2023) for a fitted ``sklearn.tree.DecisionTreeClassifier``.
+    """Probable explanations (Submodular) for a fitted ``sklearn.tree.DecisionTreeClassifier``.
 
     >>> ex = DecisionTreeExplainer(dt, feature_names=X.columns)
     >>> print(ex.explain(x, k=4, method="gd"))
@@ -99,7 +99,7 @@ class DecisionTreeExplainer:
         else:
             raise ValueError(f"unknown method {method!r}, expected one of {self.METHODS}")
 
-        return Explanation(method=f"uai2023-{method}", prediction=self.model.classes_[target],
+        return Explanation(method=f"submodular-{method}", prediction=self.model.classes_[target],
                            literals=list(S), features=self.bina.features(S),
                            conditions=self.bina.describe(S, self.feature_names),
                            error=float(W_f(phi, S, n)))

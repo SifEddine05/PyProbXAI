@@ -5,7 +5,7 @@ Literal +v means ``x[feature] > threshold`` and -v means ``x[feature] <= thresho
 (same convention as scikit-learn: ``x <= threshold`` goes to the left child).
 
 A tree is represented by its root-to-leaf paths; the paths leading to a set of classes form an
-orthogonal DNF (the leaves are disjoint), which is what the error functions of the UAI 2023 and
+orthogonal DNF (the leaves are disjoint), which is what the error functions of the Submodular and
 k-pseudo papers count models of.
 """
 from fractions import Fraction

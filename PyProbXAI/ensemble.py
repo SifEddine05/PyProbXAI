@@ -10,8 +10,8 @@ leaf reached by x. The error of a term S is
 Methods
   * "ga"        greedy ascent with the curvature based stopping rule
   * "gd"        greedy descent
-  * "majority"  greedy ascent of UAI 2023 on the trees voting for c, stopped as soon as the error
-                (unweighted, W_f of UAI 2023) of at least half of the trees is 0: approximation of a
+  * "majority"  greedy ascent of Submodular on the trees voting for c, stopped as soon as the error
+                (unweighted, W_f of Submodular) of at least half of the trees is 0: approximation of a
                 majoritary reason
 """
 import math
@@ -87,12 +87,12 @@ def greedy_descent(k, I, Phi, weights, n):
 
 
 def mean_error(S, Phi, n):
-    """Average over the trees of their UAI 2023 error W_f (no weights)."""
+    """Average over the trees of their Submodular error W_f (no weights)."""
     return sum(W_s(phi, S, n) for phi in Phi) / len(Phi)
 
 
 def majority_ascent(I, Phi, voters, n, q, k=None):
-    """Greedy ascent of UAI 2023 stopped when at least q trees have error 0.
+    """Greedy ascent of Submodular stopped when at least q trees have error 0.
 
     A tree has error 0 when S implies its prediction (M(phi_i ∧ S) = 0). Only the trees in
     ``voters`` (those predicting c on x) can reach 0, since S is made of literals of x. At each
@@ -175,7 +175,7 @@ class TreeEnsembleExplainer:
 
         k is optional (no limit when None). For method="majority", the ascent stops as soon as
         half of the trees (rounded up) have error 0; the reported error is then the average of the
-        unweighted UAI 2023 errors of the trees."""
+        unweighted Submodular errors of the trees."""
         x = np.asarray(x, dtype=float).ravel()
         prediction = predict_one(self.model, x)
         target = int(np.flatnonzero(self.model.classes_ == prediction)[0])
@@ -197,7 +197,7 @@ class TreeEnsembleExplainer:
             if len(voters) >= q and len(solved) < q:
                 warnings.warn(f"size limit k={k} reached with {len(solved)} trees out of {m} "
                               f"with error 0 (required: {q})")
-            return Explanation(method="uai-majority", prediction=prediction, literals=list(S),
+            return Explanation(method="k-pseudo-majority", prediction=prediction, literals=list(S),
                                features=self.bina.features(S),
                                conditions=self.bina.describe(S, self.feature_names),
                                error=float(mean_error(S, Phi, n)),
@@ -215,7 +215,7 @@ class TreeEnsembleExplainer:
         else:
             raise ValueError(f"unknown method {method!r}, expected one of {self.METHODS}")
 
-        return Explanation(method=f"kpseudo-{method}", prediction=prediction, literals=list(S),
+        return Explanation(method=f"k-pseudo-{method}", prediction=prediction, literals=list(S),
                            features=self.bina.features(S),
                            conditions=self.bina.describe(S, self.feature_names),
                            error=float(epsilon_forest(S, Phi, w, n)))

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "PyProbXAI"
 version = "0.1.0"
-description = "Probable explanations for decision trees (UAI 2023), tree ensembles (k-pseudo) and black-box models (BE)"
+description = "Probable explanations for decision trees (Submodular), tree ensembles (k-pseudo) and black-box models (BE)"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = ["numpy", "scikit-learn>=1.0"]

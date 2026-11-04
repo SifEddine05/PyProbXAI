@@ -1,4 +1,4 @@
-"""Exact model counting on orthogonal DNFs (shared by the UAI 2023 and k-pseudo algorithms).
+"""Exact model counting on orthogonal DNFs (shared by the Submodular and k-pseudo algorithms).
 
 Counts are exact Python integers, so the results (and the tie-breaking of the greedy algorithms)
 are the same as in the original code, and nothing overflows when the number of Boolean variables

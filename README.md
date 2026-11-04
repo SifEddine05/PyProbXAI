@@ -30,8 +30,8 @@ flowchart TB
     D -->|"Tree Ensemble"| F["TreeEnsembleExplainer"]
     D -->|"Black-box Model"| G["BlackBoxExplainer"]
 
-    E --> E1["UAI 2023: GD / GA"]
-    F --> F1["k-Pseudo: GD / GA / Majority"]
+    E --> E1["Submodular: GD / GA"]
+    F --> F1["k-pseudo: GD / GA / Majority"]
     G --> G1["BanditExplain"]
 
     E1 --> H["Explanation"]
@@ -158,7 +158,7 @@ e = explainer.explain(x, k=4)
 
 ## 4. Explanation Methods
 
-### Decision trees — UAI 2023
+### Decision trees — Submodular
 
 `DecisionTreeExplainer` implements two greedy algorithms:
 
@@ -167,7 +167,7 @@ e = explainer.explain(x, k=4)
 
 The explanation error is computed exactly under a uniform distribution over the Boolean variables representing the tree.
 
-### Tree ensembles — k-Pseudo-Probable Explanations
+### Tree ensembles — k-pseudo
 
 `TreeEnsembleExplainer` supports:
 
@@ -252,8 +252,8 @@ The repository provides five executable examples covering different models and d
 
 | Example | Dataset | Model | Explanation approach |
 |---|---|---|---|
-| Decision tree | Adult | Decision Tree | UAI 2023 |
-| Random forest | Adult | Random Forest | k-Pseudo |
+| Decision tree | Adult | Decision Tree | Submodular |
+| Random forest | Adult | Random Forest | k-pseudo |
 | Neural network | Adult | MLP | BanditExplain |
 | Image classification | MNIST (3 vs 8) | CNN | BanditExplain + heatmaps |
 | Text classification | 20 Newsgroups | MLP | BanditExplain on words |

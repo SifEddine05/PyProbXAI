@@ -1,4 +1,4 @@
-"""Example 1 - Decision tree on Adult: UAI 2023 probable explanations (GD and GA).
+"""Example 1 - Decision tree on Adult: Submodular probable explanations (GD and GA).
 
 Run:  python examples/example_1_decision_tree_adult.py
 """

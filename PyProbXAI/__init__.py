@@ -1,6 +1,6 @@
 """PyProbXAI: probable explanations of classifiers.
 
-  * decision trees           -> UAI 2023 probable explanations       (DecisionTreeExplainer)
+  * decision trees           -> Submodular probable explanations       (DecisionTreeExplainer)
   * tree ensembles           -> k-pseudo-probable explanations       (TreeEnsembleExplainer)
   * any other (black box)    -> BE, BanditExplain PAC explanations   (BlackBoxExplainer)
 
@@ -20,7 +20,7 @@ __version__ = "0.1.0"
 
 
 def make_explainer(model, X_background=None, **kwargs):
-    """Explainer adapted to the model: UAI 2023 for a DecisionTreeClassifier, k-pseudo for a forest
+    """Explainer adapted to the model: Submodular for a DecisionTreeClassifier, k-pseudo for a forest
     of decision trees (RandomForest, ExtraTrees, Bagging), BE for anything else.
 
     kwargs are passed to the explainer constructor (feature_names, categorical_features, n_bins,
