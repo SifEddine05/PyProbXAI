@@ -172,7 +172,7 @@ The explanation error is computed exactly under a uniform distribution over the 
 
 - **GD:** removes conditions from the direct reason.
 - **GA:** progressively adds conditions using a curvature-based stopping rule.
-- **Majority:** seeks conditions sufficient to ensure that at least a specified number of trees predict the original class.
+- **Majority:** available only for Random Forest models. It seeks conditions sufficient to ensure that at least a specified number of trees predict the original class.
 
 The ensemble explanation error is based on the weighted errors of its individual trees.
 
