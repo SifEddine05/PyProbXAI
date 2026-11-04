@@ -133,6 +133,7 @@ e = explain(
 
 Users can also instantiate an explainer directly. This is particularly useful when explaining multiple instances with the same model, since the model is analyzed only once.
 
+
 ```python
 from probexplain import (
     DecisionTreeExplainer,
