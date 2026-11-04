@@ -32,7 +32,7 @@ flowchart TB
 
     E --> E1["UAI 2023: GD / GA"]
     F --> F1["k-Pseudo: GD / GA / Majority"]
-    G --> G1["BanditExplain: Monte Carlo + MAB"]
+    G --> G1["BanditExplain]
 
     E1 --> H["Explanation"]
     F1 --> H
