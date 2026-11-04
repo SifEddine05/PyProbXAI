@@ -23,7 +23,7 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.neural_network import MLPClassifier
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from probexplain import BlackBoxExplainer  # noqa: E402
+from PyProbXAI import BlackBoxExplainer  # noqa: E402
 
 CATEGORY_A, CATEGORY_B = "sci.med", "sci.space"
 N_WORDS = 50                    # number of word features (= literals of BE)

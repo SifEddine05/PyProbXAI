@@ -1,8 +1,8 @@
-# probexplain
+# PyProbXAI
 
 **A Python library for generating probable explanations of machine learning predictions.**
 
-`probexplain` is a Python explainability library that generates concise explanations for individual predictions. It integrates three complementary approaches to explain decision trees, tree ensembles, and black-box models, including neural networks and CNNs.
+`PyProbXAI` is a Python explainability library that generates concise explanations for individual predictions. It integrates three complementary approaches to explain decision trees, tree ensembles, and black-box models, including neural networks and CNNs.
 
 The library provides a unified interface to generate explanations without requiring users to implement the underlying algorithms.
 
@@ -23,7 +23,7 @@ The library integrates three explanation approaches:
 ```mermaid
 flowchart TB
     A["User"] --> B["Trained Model + Instance x"]
-    B --> C["probexplain API"]
+    B --> C["PyProbXAI API"]
     C --> D{"Model type"}
 
     D -->|"Decision Tree"| E["DecisionTreeExplainer"]
@@ -103,7 +103,7 @@ pip install -r requirements-examples.txt
 The simplest way to generate an explanation is to use `explain()`. The library automatically selects the appropriate explainer based on the model type.
 
 ```python
-from probexplain import explain
+from PyProbXAI import explain
 
 # model: fitted classification model
 # x: instance to explain
@@ -135,7 +135,7 @@ Users can also instantiate an explainer directly. This is particularly useful wh
 
 
 ```python
-from probexplain import (
+from PyProbXAI import (
     DecisionTreeExplainer,
     TreeEnsembleExplainer,
     BlackBoxExplainer

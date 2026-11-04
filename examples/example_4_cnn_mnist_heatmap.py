@@ -27,7 +27,7 @@ from torch import nn  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
-from probexplain import BlackBoxExplainer  # noqa: E402
+from PyProbXAI import BlackBoxExplainer  # noqa: E402
 
 warnings.filterwarnings("ignore")   # empty quantile bins of the always black blocks
 np.random.seed(0)

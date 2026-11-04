@@ -26,7 +26,7 @@ def adapted_explainer(model):
 
 def _message(model, explainer, right):
     return (f"{explainer} is not adapted to a {type(model).__name__}: use {right} instead "
-            f"(or probexplain.explain, which chooses the explainer from the model)")
+            f"(or PyProbXAI.explain, which chooses the explainer from the model)")
 
 
 def check_model(model, explainer):

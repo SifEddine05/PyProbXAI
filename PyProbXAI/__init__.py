@@ -1,10 +1,10 @@
-"""probexplain: probable explanations of classifiers.
+"""PyProbXAI: probable explanations of classifiers.
 
   * decision trees           -> UAI 2023 probable explanations       (DecisionTreeExplainer)
   * tree ensembles           -> k-pseudo-probable explanations       (TreeEnsembleExplainer)
   * any other (black box)    -> BE, BanditExplain PAC explanations   (BlackBoxExplainer)
 
->>> from probexplain import explain
+>>> from PyProbXAI import explain
 >>> e = explain(model, x, k=4, X_background=X_train)
 >>> print(e)
 """

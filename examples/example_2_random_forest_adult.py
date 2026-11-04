@@ -11,7 +11,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from probexplain import TreeEnsembleExplainer  # noqa: E402
+from PyProbXAI import TreeEnsembleExplainer  # noqa: E402
 
 K = 4                  # maximal size of the explanations
 N_INSTANCES = 5        # number of test instances to explain

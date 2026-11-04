@@ -13,7 +13,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from probexplain import BlackBoxExplainer  # noqa: E402
+from PyProbXAI import BlackBoxExplainer  # noqa: E402
 
 warnings.filterwarnings("ignore")   # empty quantile bins of capital-gain / capital-loss
 

@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from probexplain import DecisionTreeExplainer  # noqa: E402
+from PyProbXAI import DecisionTreeExplainer  # noqa: E402
 
 K = 3                  # maximal size of the explanations
 N_INSTANCES = 5        # number of test instances to explain
