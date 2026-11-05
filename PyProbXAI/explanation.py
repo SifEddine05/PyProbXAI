@@ -1,6 +1,6 @@
 """Result object returned by every explainer."""
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Tuple
 
 import numpy as np
 
@@ -56,3 +56,71 @@ class Explanation:
             lines.append(f"  trees with error 0: {self.n_sufficient_trees} / {self.n_trees}")
         lines += [f"  * {c}" for c in self.conditions] or ["  (empty explanation)"]
         return "\n".join(lines)
+
+    def _repr_html_(self) -> str:
+        """Rich HTML display in Jupyter / IPython environments."""
+        from .display import render_explanation_html
+        return render_explanation_html(self)
+
+    def show_tabular(
+        self,
+        x: Optional[Any] = None,
+        feature_names: Optional[List[str]] = None,
+        title: Optional[str] = None,
+        predicted_class: Optional[Any] = None,
+        true_class: Optional[Any] = None,
+    ):
+        """Return an interactive TabularExplanationView highlighting active and invariant features."""
+        from .display import TabularExplanationView
+        return TabularExplanationView(
+            self,
+            x=x,
+            feature_names=feature_names,
+            title=title,
+            predicted_class=predicted_class,
+            true_class=true_class,
+        )
+
+    def show_text(
+        self,
+        text: str,
+        title: Optional[str] = None,
+        predicted_class: Optional[Any] = None,
+        true_class: Optional[Any] = None,
+    ):
+        """Return a visual TextExplanationView highlighting conditions in a text document."""
+        from .display import TextExplanationView
+        return TextExplanationView(
+            self, text, title=title, predicted_class=predicted_class, true_class=true_class
+        )
+
+    def show_image(
+        self,
+        image: np.ndarray,
+        block_size: Optional[int] = None,
+        grid_shape: Optional[Tuple[int, int]] = None,
+        title: Optional[str] = None,
+        predicted_class: Optional[Any] = None,
+        true_class: Optional[Any] = None,
+        **kwargs,
+    ):
+        """Return an interactive ImageExplanationView with embedded 3-panel heatmaps in a unified card."""
+        from .display import ImageExplanationView
+        return ImageExplanationView(
+            self, image, block_size=block_size, grid_shape=grid_shape,
+            title=title, predicted_class=predicted_class, true_class=true_class, **kwargs
+        )
+
+    def plot_image(
+        self,
+        image: np.ndarray,
+        block_size: Optional[int] = None,
+        grid_shape: Optional[Tuple[int, int]] = None,
+        title: Optional[str] = None,
+        **kwargs,
+    ):
+        """Generate and return a 3-panel matplotlib Figure for this image explanation."""
+        from .display import plot_image_explanation
+        return plot_image_explanation(
+            self, image, block_size=block_size, grid_shape=grid_shape, title=title, **kwargs
+        )

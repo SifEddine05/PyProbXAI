@@ -1,5 +1,10 @@
 # PyProbXAI
 
+[![PyPI version](https://img.shields.io/pypi/v/probexplain.svg)](https://pypi.org/project/probexplain/)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://sifeddine05.github.io/probexplain/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+
 **A Python library for generating probable explanations of machine learning predictions.**
 
 `PyProbXAI` is a Python explainability library that generates concise explanations for individual predictions. It integrates three complementary approaches to explain decision trees, tree ensembles, and black-box models, including neural networks and CNNs.
@@ -56,22 +61,31 @@ flowchart TB
 - PAC-based error estimation for black-box models.
 - Majority explanations for tree ensembles.
 - Support for tabular, image and text classification.
+- Interactive visualizations and rich HTML displays for Jupyter notebooks and standalone reports.
 
 ## 2. Installation
 
 **Requirements:** Python >= 3.9, NumPy and Scikit-learn.
 
-Install directly from GitHub:
+### From PyPI:
 
 ```bash
-pip install git+https://github.com/SifEddine05/PyProbXAI.git
+pip install probexplain
 ```
 
+Optional dependency groups:
+```bash
+pip install "probexplain[examples]"   # to run example scripts (pandas, matplotlib, torch)
+pip install "probexplain[docs]"       # to build the documentation
+pip install "probexplain[all]"        # everything
+```
+
+### From GitHub:
 Alternatively, clone the repository:
 
 ```bash
 git clone https://github.com/SifEddine05/PyProbXAI.git
-cd probexplain
+cd PyProbXAI
 
 python -m venv .venv
 ```
@@ -246,9 +260,31 @@ Explanation [be] of prediction 'sci.space'
   * spacecraft = present
 ```
 
-## 7. Demonstrations
+### Visualization & Display
 
-The repository provides five executable examples covering different models and data types.
+`PyProbXAI` provides built-in rich displays and interactive views tailored to different data modalities:
+
+- **Jupyter Notebook Integration:** Evaluating an `Explanation` object in a notebook automatically renders a styled HTML card displaying certified precision, error bound and condition badges.
+- **Tabular View:** `e.show_tabular(x, feature_names=...)` returns an interactive `TabularExplanationView` displaying feature values, active constraints, and invariant features that can vary freely without altering the guarantee.
+- **Text View:** `e.show_text(document)` returns a `TextExplanationView` with inline highlighted words for active evidence and badges for absence guards.
+- **Vision View & Plots:** `e.show_image(image, block_size=...)` returns an `ImageExplanationView` with embedded 3-panel heatmaps (original image, super-pixel heatmap, and overlay). Alternatively, `e.plot_image(image)` directly returns a Matplotlib Figure.
+- **Export:** Any view can be exported to a standalone HTML file using `.save("report.html")`.
+
+## 7. Demonstrations & Tutorials
+
+### Interactive Tutorials (Notebooks)
+
+Step-by-step Jupyter notebooks are available in `examples/notebooks/`:
+
+| Notebook | Focus |
+|---|---|
+| `tutorial_tabular_explanation.ipynb` | Tabular explanations across Decision Trees, Random Forests, and MLPs with feature invariance inspection. |
+| `tutorial_text_explanation.ipynb` | Text classification (20 Newsgroups) with document viewer and presence/absence word highlighting. |
+| `tutorial_vision_explanation.ipynb` | Vision classification (MNIST CNN) with super-pixel segmentation and 3-panel heatmap visualizations. |
+
+### Command-line Scripts
+
+The repository also provides standalone executable scripts covering different models and data types:
 
 | Example | Dataset | Model | Explanation approach |
 |---|---|---|---|
@@ -264,12 +300,16 @@ Run an example from the repository root:
 python examples/example_1_decision_tree_adult.py
 ```
 
-The other scripts follow the same naming convention:
+The example directory structure:
 
 ```text
 examples/
 ├── data/
 │   └── adult.csv
+├── notebooks/
+│   ├── tutorial_tabular_explanation.ipynb
+│   ├── tutorial_text_explanation.ipynb
+│   └── tutorial_vision_explanation.ipynb
 ├── example_1_decision_tree_adult.py
 ├── example_2_random_forest_adult.py
 ├── example_3_neural_network_adult.py
@@ -292,6 +332,6 @@ The demonstrations illustrate:
 
 ---
 
-**Repository:** https://github.com/SifEddine05/probexplain
+**Repository:** https://github.com/SifEddine05/PyProbXAI
 
 For questions, suggestions, bug reports or contributions, please use the GitHub repository.
