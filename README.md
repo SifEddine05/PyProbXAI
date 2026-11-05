@@ -64,13 +64,13 @@ flowchart TB
 Install directly from GitHub:
 
 ```bash
-pip install git+https://github.com/SifEddine05/probexplain.git
+pip install git+https://github.com/SifEddine05/PyProbXAI.git
 ```
 
 Alternatively, clone the repository:
 
 ```bash
-git clone https://github.com/SifEddine05/probexplain.git
+git clone https://github.com/SifEddine05/PyProbXAI.git
 cd probexplain
 
 python -m venv .venv
