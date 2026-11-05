@@ -1,5 +1,10 @@
 # PyProbXAI
 
+[![PyPI version](https://img.shields.io/pypi/v/probexplain.svg)](https://pypi.org/project/probexplain/)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://sifeddine05.github.io/probexplain/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+
 **A Python library for generating probable explanations of machine learning predictions.**
 
 `PyProbXAI` is a Python explainability library that generates concise explanations for individual predictions. It integrates three complementary approaches to explain decision trees, tree ensembles, and black-box models, including neural networks and CNNs.
@@ -62,12 +67,20 @@ flowchart TB
 
 **Requirements:** Python >= 3.9, NumPy and Scikit-learn.
 
-Install directly from GitHub:
+### From PyPI:
 
 ```bash
-pip install git+https://github.com/SifEddine05/PyProbXAI.git
+pip install probexplain
 ```
 
+Optional dependency groups:
+```bash
+pip install "probexplain[examples]"   # to run example scripts (pandas, matplotlib, torch)
+pip install "probexplain[docs]"       # to build the documentation
+pip install "probexplain[all]"        # everything
+```
+
+### From GitHub:
 Alternatively, clone the repository:
 
 ```bash
