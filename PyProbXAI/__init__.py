@@ -12,10 +12,35 @@ from ._models import adapted_explainer
 from .blackbox import BlackBoxExplainer
 from .ensemble import TreeEnsembleExplainer
 from .explanation import Explanation
+from .display import (
+    BaseExplanationView,
+    ImageExplanationView,
+    TabularExplanationView,
+    TextExplanationView,
+    plot_image_explanation,
+    render_explanation_html,
+    render_image_explanation_html,
+    render_tabular_explanation_html,
+    render_text_explanation_html,
+)
 from .tree import DecisionTreeExplainer
 
-__all__ = ["explain", "make_explainer", "Explanation", "DecisionTreeExplainer",
-           "TreeEnsembleExplainer", "BlackBoxExplainer"]
+__all__ = [
+    "explain",
+    "make_explainer",
+    "Explanation",
+    "DecisionTreeExplainer",
+    "TreeEnsembleExplainer",
+    "BlackBoxExplainer",
+    "TextExplanationView",
+    "ImageExplanationView",
+    "TabularExplanationView",
+    "render_explanation_html",
+    "render_text_explanation_html",
+    "render_image_explanation_html",
+    "render_tabular_explanation_html",
+    "plot_image_explanation",
+]
 __version__ = "0.1.0"
 
 
