@@ -65,3 +65,16 @@ precision: 0.9844
 
 Notice how `DecisionTreeExplainer` computes the exact error on the orthogonal DNF representing tree branches voting for the alternative class.
 
+---
+
+## 3. Interactive Visualization
+
+In a Jupyter notebook, render the interactive tabular card with feature invariance inspection:
+
+```python
+# Displays interactive card highlighting certified constraints vs invariant features
+exp_gd.show_tabular(x, feature_names=X.columns)
+```
+
+> **Interactive Notebook:** See [`examples/notebooks/tutorial_tabular_explanation.ipynb`](https://github.com/SifEddine05/PyProbXAI/blob/main/examples/notebooks/tutorial_tabular_explanation.ipynb) for the full interactive walkthrough across Decision Trees, Random Forests, and MLPs.
+

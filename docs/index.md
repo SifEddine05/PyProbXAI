@@ -55,6 +55,9 @@ print(exp)
 #   * education-num > 12.0
 # error:     0.0412
 # precision: 0.9588
+
+# Interactive visualizations (Jupyter HTML card or standalone report):
+exp.show_tabular(x, feature_names=feature_names)
 ```
 
 ---

@@ -61,3 +61,14 @@ print(exp)
 
 The output highlights key terms (e.g., `orbit = present`, `medical = absent`) that suffice to retain the predicted category with PAC probabilistic guarantees.
 
+---
+
+## 3. Interactive Document Highlight View
+
+```python
+# Render the text document with inline highlighted words and absence guards:
+exp.show_text(raw_document_string)
+```
+
+> **Interactive Notebook:** Run [`examples/notebooks/tutorial_text_explanation.ipynb`](https://github.com/SifEddine05/PyProbXAI/blob/main/examples/notebooks/tutorial_text_explanation.ipynb) to interactively inspect text explanations and document highlighting.
+

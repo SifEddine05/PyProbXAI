@@ -89,5 +89,6 @@ nav:
       - Tree Ensembles: api/ensemble.md
       - Black-Box Models: api/blackbox.md
       - Explanation Object: api/explanation.md
+      - Visual Displays: api/display.md
   - Citation: citation.md
 

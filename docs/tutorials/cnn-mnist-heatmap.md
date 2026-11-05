@@ -63,3 +63,17 @@ print(exp)
 
 The resulting conditions identify the critical blocks (e.g., the top loop distinguishing a 3 from an 8) required to preserve the CNN's classification with $>90\%$ probability.
 
+---
+
+## 4. Interactive Heatmap Visualization
+
+```python
+# 1. Interactive HTML view with embedded 3-panel heatmaps:
+exp.show_image(raw_image_28x28, block_size=4)
+
+# 2. Or generate a matplotlib Figure directly:
+fig = exp.plot_image(raw_image_28x28, block_size=4)
+```
+
+> **Interactive Notebook:** Run [`examples/notebooks/tutorial_vision_explanation.ipynb`](https://github.com/SifEddine05/PyProbXAI/blob/main/examples/notebooks/tutorial_vision_explanation.ipynb) to interactively explore super-pixel heatmaps across test digits.
+

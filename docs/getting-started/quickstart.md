@@ -89,10 +89,41 @@ Every explainer returns an instance of `Explanation`:
 
 ```python
 # Access attributes programmatically:
-print(exp.pred)          # Predicted class
-print(exp.conditions)    # List of Condition objects
+print(exp.prediction)    # Predicted class
+print(exp.conditions)    # Human-readable condition strings
+print(exp.features)      # Indices of selected features
 print(exp.error)         # Probability of prediction flip
 print(exp.precision)     # 1 - error
-print(exp.to_dict())     # JSON-serializable dictionary
+print(exp.size)          # Number of conditions
 ```
+
+---
+
+## Interactive Visualizations & Notebooks
+
+In Jupyter environments, evaluating an `Explanation` automatically renders an HTML summary card with certified precision and condition badges.
+
+`PyProbXAI` also provides dedicated interactive views for different data modalities:
+
+```python
+# Tabular: inspect active constraints and invariant features
+view = exp.show_tabular(x, feature_names=feature_names)
+
+# Text: highlight active words and absent guard terms in a document
+view = exp.show_text(document)
+
+# Vision: 3-panel heatmap (original image, super-pixel heatmap, overlay)
+view = exp.show_image(image, block_size=4)
+# Or return a matplotlib figure:
+fig = exp.plot_image(image, block_size=4)
+
+# Export any interactive view as a standalone HTML file:
+view.save("explanation_report.html")
+```
+
+Interactive, step-by-step Jupyter notebooks are available in `examples/notebooks/`:
+
+- `tutorial_tabular_explanation.ipynb` (Adult dataset: Decision Trees, Random Forests, MLPs)
+- `tutorial_text_explanation.ipynb` (20 Newsgroups: document classification with word highlights)
+- `tutorial_vision_explanation.ipynb` (MNIST CNN: super-pixel heatmap visualization)
 

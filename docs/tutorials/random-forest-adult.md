@@ -60,3 +60,14 @@ print(exp_maj)
 
 This guarantees that whenever those conditions hold, a strict majority of individual trees will predict the same class.
 
+---
+
+## 4. Interactive Visualization
+
+```python
+# Visualize certified constraints, voting statistics and invariant features
+exp_ga.show_tabular(x, feature_names=X.columns, title="Adult - Random Forest Explanation")
+```
+
+> **Interactive Notebook:** Run [`examples/notebooks/tutorial_tabular_explanation.ipynb`](https://github.com/SifEddine05/PyProbXAI/blob/main/examples/notebooks/tutorial_tabular_explanation.ipynb) to interactively inspect feature invariance and compare k-pseudo vs majority explanations.
+

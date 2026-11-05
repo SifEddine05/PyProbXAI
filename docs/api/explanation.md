@@ -9,4 +9,8 @@ Data structure returned by every explainer in `PyProbXAI`.
         - size
         - precision
         - __str__
+        - show_tabular
+        - show_text
+        - show_image
+        - plot_image
 
