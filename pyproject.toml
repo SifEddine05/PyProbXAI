@@ -10,7 +10,10 @@ readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"
 authors = [
-    {name = "temporary_for_anonymous_review"}
+    {name = "Sifeddine Sellami"},
+    {name = "Florent Moulon"},
+    {name = "Louenas Bounia"},
+    {name = "Juba Agoun"}
 ]
 keywords = [
     "explainable-ai",
@@ -42,10 +45,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://temporary_for_anonymous_review"
-Documentation = "https://temporary_for_anonymous_review"
-Repository = "https://temporary_for_anonymous_review"
-"Bug Tracker" = "https://temporary_for_anonymous_review"
+Homepage = "https://github.com/SifEddine05/PyProbXAI/"
+Documentation = "https://sifeddine05.github.io/PyProbXAI/"
+Repository = "https://github.com/SifEddine05/PyProbXAI"
+"Bug Tracker" = "https://github.com/SifEddine05/PyProbXAI/issues"
+
 
 [tool.setuptools]
 packages = ["PyProbXAI"]

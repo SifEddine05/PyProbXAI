@@ -44,7 +44,7 @@ If you are developing algorithms or contributing to `PyProbXAI`:
 
 ```bash
 # Clone the repository
-git clone https://github.com/temporary_for_anonymous_review/PyProbXAI.git
+git clone https://github.com/SifEddine05/PyProbXAI.git
 cd PyProbXAI
 
 # Create a virtual environment

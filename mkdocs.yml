@@ -1,9 +1,9 @@
 site_name: PyProbXAI
 site_description: "Probable Explanations for Machine Learning Classifiers: Decision Trees, Tree Ensembles, and Black-Box Models"
 site_author: "PyProbXAI Contributors"
-site_url: "https://temporary_for_anonymous_review"
-repo_url: "https://temporary_for_anonymous_review"
-repo_name: "https://temporary_for_anonymous_review"
+site_url: "https://sifeddine05.github.io/PyProbXAI/"
+repo_url: "https://github.com/SifEddine05/PyProbXAI"
+repo_name: "SifEddine05/PyProbXAI"
 
 theme:
   name: material

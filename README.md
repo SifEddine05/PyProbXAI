@@ -1,6 +1,6 @@
 # PyProbXAI
 
-[![PyPI version](https://img.shields.io/pypi/v/probexplain.svg)](https://pypi.org/project/probexplain/)
+[![PyPI version](https://img.shields.io/pypi/v/PyProbXAI.svg)](https://pypi.org/project/PyProbXAI/)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://sifeddine05.github.io/PyProbXAI/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
@@ -63,6 +63,11 @@ flowchart TB
 - Support for tabular, image and text classification.
 - Interactive visualizations and rich HTML displays for Jupyter notebooks and standalone reports.
 
+### Documentation & Tutorials:
+Explore the documentation and tutorials for guides, examples, and detailed usage instructions:
+[https://sifeddine05.github.io/PyProbXAI/](https://sifeddine05.github.io/PyProbXAI/)
+
+
 ## 2. Installation
 
 **Requirements:** Python >= 3.9, NumPy and Scikit-learn.
@@ -70,14 +75,14 @@ flowchart TB
 ### From PyPI:
 
 ```bash
-pip install probexplain
+pip install PyProbXAI
 ```
 
 Optional dependency groups:
 ```bash
-pip install "probexplain[examples]"   # to run example scripts (pandas, matplotlib, torch)
-pip install "probexplain[docs]"       # to build the documentation
-pip install "probexplain[all]"        # everything
+pip install "PyProbXAI[examples]"   # to run example scripts (pandas, matplotlib, torch)
+pip install "PyProbXAI[docs]"       # to build the documentation
+pip install "PyProbXAI[all]"        # everything
 ```
 
 ### From GitHub:
