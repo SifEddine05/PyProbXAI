@@ -47,11 +47,12 @@ class Explanation:
 
     @property
     def precision(self):
+        """Deprecated / convenience property: 1.0 - error."""
         return 1.0 - self.error
 
     def __str__(self):
         lines = [f"Explanation [{self.method}] of prediction {self.prediction!r}",
-                 f"  size = {self.size}, error = {self.error:.6g} (precision {self.precision:.6g})"]
+                 f"  size = {self.size}, error = {self.error:.6g}"]
         if self.n_sufficient_trees is not None:
             lines.append(f"  trees with error 0: {self.n_sufficient_trees} / {self.n_trees}")
         lines += [f"  * {c}" for c in self.conditions] or ["  (empty explanation)"]

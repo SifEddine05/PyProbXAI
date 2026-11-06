@@ -62,6 +62,5 @@ conditions:
   * education-num <= 9.0
   * age <= 28.0
 error: 0.0480
-precision: 0.9520
 ```
 

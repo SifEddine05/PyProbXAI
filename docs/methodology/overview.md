@@ -6,19 +6,27 @@ Explainable Artificial Intelligence (XAI) methods aim to identify which elements
 
 ---
 
-## Formal Definition of Error and Precision
+## Formal Definition of Explanation Error $\varepsilon_{h,x}(S)$
 
-When the conditions in $S$ are held fixed and the remaining features vary according to a reference distribution:
+Let $h : \{0,1\}^d \to \mathcal{Y}$ be a classifier and $x \in \{0,1\}^d$ an instance whose prediction is $y = h(x)$. An explanation $S \subseteq [d]$ is a subset of feature conditions whose values are fixed to those of $x$ ($x_S$).
 
-The **error** of an explanation corresponds to the probability that the prediction changes:
+When the conditions in $S$ are held fixed and the remaining features vary according to a distribution $\mathcal{D}$, the **error** of an explanation corresponds to the probability that the prediction changes:
 
-$$\operatorname{err}(S, x) = \Pr\big[f(x') \neq y \mid x' \models S\big]$$
+$$\varepsilon_{h,x}(S) = \Pr_{z \sim \mathcal{D}}\big[h(z) \neq h(x) \mid z_S = x_S\big]$$
 
-The **precision** is defined as:
+### Uniform Distribution on Boolean Features
 
-$$\operatorname{prec}(S, x) = 1 - \operatorname{err}(S, x)$$
+Following the formal XAI literature (Wäldchen et al., 2021; Arenas et al., 2022; Bounia & Koriche, 2023; Sellami et al., 2026), under the uniform distribution $\mathcal{U}(x_S)$ over the Boolean completions $\{z \in \{0, 1\}^d : z_S = x_S\}$, the error function becomes:
 
-The objective is to select a concise set of conditions of size $|S| \le k$ that maintains a high precision (low error).
+$$\varepsilon_{h,x}(S) = \frac{|\{z \in \{0,1\}^d : h(z) \neq h(x), z_S = x_S\}|}{|\{z \in \{0,1\}^d : z_S = x_S\}|} = \frac{\mu_{h,x}(S)}{2^{d-|S|}}$$
+
+where $\mu_{h,x}(S)$ is the number of completions of $x_S$ misclassified by $h$ (a model counting quantity).
+
+A **probabilistic explanation** with error parameter $\epsilon$ and size limit $k$ seeks a subset $S \subseteq [d]$ such that:
+
+$$\varepsilon_{h,x}(S) \le \epsilon \quad \text{and} \quad |S| \le k$$
+
+In the formal explainability literature, explanations are characterized through this error function $\varepsilon_{h,x}(S)$ rather than through precision ($1 - \varepsilon$). The objective is to identify a concise explanation ($|S| \le k$) minimizing this error.
 
 ---
 
@@ -60,4 +68,4 @@ As noted in the paper, the library unifies methods whose assumptions and guarant
    The `majority` method provides an approximation of a majority explanation over the individual trees. It does not constitute an exact guarantee on the final prediction of a scikit-learn ensemble (which averages predicted class probabilities across trees rather than taking a pure majority vote).
 
 3. **Sample Complexity in Black-Box Models**:
-   For black-box models, the choice of the reference dataset and the PAC parameters $\eta$ (precision tolerance) and $\delta$ (confidence level) directly governs the number of queries to the underlying model.
+   For black-box models, the choice of the reference dataset and the PAC parameters $\eta$ (additive error tolerance) and $\delta$ (confidence level) directly governs the number of queries to the underlying model.

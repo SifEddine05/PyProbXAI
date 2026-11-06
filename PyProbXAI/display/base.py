@@ -57,15 +57,14 @@ def render_card_shell(
     """Single source of truth for the unified visual card layout and typography."""
     pred_str = _escape(predicted_class)
     error_val = float(error)
-    prec_val = float(precision)
-    precision_pct = prec_val * 100.0
+    error_pct = error_val * 100.0
 
-    if prec_val >= 0.90:
-        prec_color = "#15803d"  # green
-    elif prec_val >= 0.75:
-        prec_color = "#1d4ed8"  # blue
+    if error_val <= 0.10:
+        err_color = "#15803d"  # green: low error
+    elif error_val <= 0.25:
+        err_color = "#1d4ed8"  # blue: moderate error
     else:
-        prec_color = "#b45309"  # amber
+        err_color = "#b45309"  # amber: higher error
 
     class_info = [f'<span><strong>Predicted class:</strong> <span style="font-weight:700;color:#0369a1;">{pred_str}</span></span>']
     if true_class is not None:
@@ -90,14 +89,14 @@ def render_card_shell(
         </div>
     </div>
 
-    <!-- Metrics Bar (Clean typography, no progress bar) -->
+    <!-- Metrics Bar (Focused on Certified Error) -->
     <div style="padding:10px 18px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;
                 align-items:baseline;font-size:13px;flex-wrap:wrap;gap:8px;background:#ffffff;">
         <div>
-            Certified Precision: <strong style="font-size:15px;color:{prec_color};">{precision_pct:.1f}%</strong>
+            Certified Error: &epsilon; &le; <strong style="font-size:15px;color:{err_color};">{error_val:.4f}</strong> <span style="font-size:12px;color:#64748b;">({error_pct:.1f}%)</span>
         </div>
         <div style="color:#64748b;">
-            Bound Error &epsilon; &le; <strong>{error_val:.4f}</strong> &nbsp;|&nbsp; {metrics_extra}
+            {metrics_extra}
         </div>
     </div>
     {body_content}
