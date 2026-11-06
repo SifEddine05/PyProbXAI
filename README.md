@@ -11,9 +11,12 @@
 
 The library provides a unified interface to generate explanations without requiring users to implement the underlying algorithms.
 
+
 ## 1. Overview
 
-A probable explanation is a small set of feature conditions that preserves the prediction of a classifier with high probability when the remaining features are allowed to vary.
+### Probabilistic Explanations
+
+A **probabilistic explanation** is a subset of features whose values are fixed to those of the instance being explained, while the remaining features are allowed to vary. It aims to preserve the classifier's prediction with high probability.
 
 Each explanation is characterized by:
 
