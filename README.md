@@ -328,7 +328,7 @@ The demonstrations illustrate:
 
 **[2]** L. Bounia. *k-Pseudo-Probable Path Explanations for Weighted Tree-Based Ensembles: Bridging Interpretability and Computational Efficiency*. ECML PKDD 2026, pp. 39–57. Springer.
 
-**[3]** S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits** [PDF](papers/BE_Paper.pdf)
+**[3]** S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits* [PDF](papers/BE_Paper.pdf)
 
 ---
 For questions, suggestions, bug reports or contributions, please use the repository issue tracker.
