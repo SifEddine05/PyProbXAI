@@ -1,5 +1,9 @@
 # PyProbXAI
 
+[![PyPI version](https://img.shields.io/pypi/v/probexplain.svg)](https://pypi.org/project/probexplain/)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://sifeddine05.github.io/PyProbXAI/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
 **A Python library for generating probable explanations of machine learning predictions.**
 
@@ -76,16 +80,12 @@ pip install "probexplain[docs]"       # to build the documentation
 pip install "probexplain[all]"        # everything
 ```
 
-### From the anonymized repository:
-
-Alternatively, download or access the repository from:
-
-[PyProbXAI – Anonymous Repository](https://anonymous.4open.science/r/PyProbXAI-E733/)
-
-If you have downloaded the repository, navigate to its directory:
+### From GitHub:
+Alternatively, clone the repository:
 
 ```bash
-cd PyProbXAI-E733
+git clone https://github.com/SifEddine05/PyProbXAI.git
+cd PyProbXAI
 
 python -m venv .venv
 ```
@@ -328,7 +328,10 @@ The demonstrations illustrate:
 
 **[2]** L. Bounia. *k-Pseudo-Probable Path Explanations for Weighted Tree-Based Ensembles: Bridging Interpretability and Computational Efficiency*. ECML PKDD 2026, pp. 39–57. Springer.
 
-**[3]** S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits* [PDF](papers/BE_Paper.pdf)
+**[3]** S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits** [PDF](papers/BE_Paper.pdf)
 
 ---
-For questions, suggestions, bug reports or contributions, please use the repository issue tracker.
+
+**Repository:** https://github.com/SifEddine05/PyProbXAI
+
+For questions, suggestions, bug reports or contributions, please use the GitHub repository.
