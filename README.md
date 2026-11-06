@@ -72,20 +72,26 @@ Explore the documentation and tutorials for guides, examples, and detailed usage
 
 **Requirements:** Python >= 3.9, NumPy and Scikit-learn.
 
-### From PyPI:
+### From PyPI
+
+The library can be installed directly from PyPI:
 
 ```bash
 pip install PyProbXAI
 ```
 
+PyProbXAI is available on PyPI: [https://pypi.org/project/PyProbXAI/0.1.0/](https://pypi.org/project/PyProbXAI/0.1.0/).
+
 Optional dependency groups:
+
 ```bash
 pip install "PyProbXAI[examples]"   # to run example scripts (pandas, matplotlib, torch)
 pip install "PyProbXAI[docs]"       # to build the documentation
 pip install "PyProbXAI[all]"        # everything
 ```
 
-### From GitHub:
+### From GitHub
+
 Alternatively, clone the repository:
 
 ```bash
