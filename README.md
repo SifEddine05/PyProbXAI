@@ -1,9 +1,5 @@
 # PyProbXAI
 
-[![PyPI version](https://img.shields.io/pypi/v/probexplain.svg)](https://pypi.org/project/probexplain/)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://sifeddine05.github.io/probexplain/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
 **A Python library for generating probable explanations of machine learning predictions.**
 
@@ -80,12 +76,16 @@ pip install "probexplain[docs]"       # to build the documentation
 pip install "probexplain[all]"        # everything
 ```
 
-### From GitHub:
-Alternatively, clone the repository:
+### From the anonymized repository:
+
+Alternatively, download or access the repository from:
+
+[PyProbXAI – Anonymous Repository](https://anonymous.4open.science/r/PyProbXAI-E733/)
+
+If you have downloaded the repository, navigate to its directory:
 
 ```bash
-git clone https://github.com/SifEddine05/PyProbXAI.git
-cd PyProbXAI
+cd PyProbXAI-E733
 
 python -m venv .venv
 ```
@@ -331,7 +331,4 @@ The demonstrations illustrate:
 **[3]** S. E. Sellami, L. Bounia, J. Agoun, C. Rouveirol. *BanditExplain: Scalable Probabilistic Explanations with PAC Guarantees via Multi-Armed Bandits** [PDF](papers/BE_Paper.pdf)
 
 ---
-
-**Repository:** https://github.com/SifEddine05/PyProbXAI
-
-For questions, suggestions, bug reports or contributions, please use the GitHub repository.
+For questions, suggestions, bug reports or contributions, please use the repository issue tracker.
