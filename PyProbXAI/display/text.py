@@ -47,7 +47,7 @@ def render_text_explanation_html(
             return (
                 f'<mark style="background:#dcfce7;color:#166534;padding:2px 5px;border-radius:3px;'
                 f'font-weight:600;border-bottom:2px solid #86efac;"'
-                f' title="Certified Evidence: &quot;{word}&quot;">{word}</mark>'
+                f' title="Active Evidence: &quot;{word}&quot;">{word}</mark>'
             )
 
         highlighted_body = pattern.sub(replacer, clean_text)

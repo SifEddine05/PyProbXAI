@@ -17,9 +17,8 @@ A probable explanation is a small set of feature conditions that preserves the p
 
 Each explanation is characterized by:
 
-- **Size:** number of selected conditions (at most `k`).
-- **Error:** probability that the prediction changes.
-- **Precision:** probability that the prediction remains unchanged (`1 - error`).
+- **Size ($k$):** number of selected conditions (at most `k`).
+- **Error ($\varepsilon$):** probability that the prediction changes when unselected features vary (under the uniform distribution, $\varepsilon_{h,x}(S) = \mu_{h,x}(S) / 2^{d-|S|}$).
 
 ### Architecture
 
@@ -43,7 +42,7 @@ flowchart TB
     F1 --> H
     G1 --> H
 
-    H --> I["Prediction + Conditions + Error + Precision"]
+    H --> I["Prediction + Conditions + Error Bound ε"]
 ```
 
 ### Available explainers
@@ -249,8 +248,7 @@ All explainers return an `Explanation` object.
 | `e.prediction` | Predicted class. |
 | `e.conditions` | Human-readable explanation conditions. |
 | `e.features` | Indices of selected features. |
-| `e.error` | Explanation error. |
-| `e.precision` | Explanation precision (`1 - error`). |
+| `e.error` | Explanation error $\varepsilon_{h,x}(S)$ (probability that the prediction changes). |
 | `e.size` | Number of selected conditions. |
 | `e.literals` | Boolean representation of the explanation. |
 | `e.n_sufficient_trees` | Number of trees with zero error (majority only). |
@@ -263,7 +261,6 @@ Explanation [be] of prediction 'sci.space'
 
   size = 4
   error = 0.142
-  precision = 0.858
 
   * medical = absent
   * satellite = present
@@ -275,7 +272,7 @@ Explanation [be] of prediction 'sci.space'
 
 `PyProbXAI` provides built-in rich displays and interactive views tailored to different data modalities:
 
-- **Jupyter Notebook Integration:** Evaluating an `Explanation` object in a notebook automatically renders a styled HTML card displaying certified precision, error bound and condition badges.
+- **Jupyter Notebook Integration:** Evaluating an `Explanation` object in a notebook automatically renders a styled HTML card displaying certified error bound ($\varepsilon \le \epsilon$) and condition badges.
 - **Tabular View:** `e.show_tabular(x, feature_names=...)` returns an interactive `TabularExplanationView` displaying feature values, active constraints, and invariant features that can vary freely without altering the guarantee.
 - **Text View:** `e.show_text(document)` returns a `TextExplanationView` with inline highlighted words for active evidence and badges for absence guards.
 - **Vision View & Plots:** `e.show_image(image, block_size=...)` returns an `ImageExplanationView` with embedded 3-panel heatmaps (original image, super-pixel heatmap, and overlay). Alternatively, `e.plot_image(image)` directly returns a Matplotlib Figure.

@@ -75,7 +75,7 @@ def plot_image_explanation(
     ------
     1. Original Input Image
     2. Selected Super-Pixel Blocks (Discrete Combinatorial Mask)
-    3. Certified Evidence Overlay (Overlay on Original Image with boundaries)
+    3. Active Evidence Overlay (Overlay on Original Image with boundaries)
     """
     import matplotlib
     matplotlib.use("Agg")
@@ -114,10 +114,10 @@ def plot_image_explanation(
         for c in range(1, cols):
             axes[1].axvline(c - 0.5, color="#94a3b8", linestyle=":", linewidth=0.7, alpha=0.7)
 
-    # Panel 3: Certified Overlay
+    # Panel 3: Active Overlay
     axes[2].imshow(img, cmap=cmap_image)
     axes[2].imshow(heatmap_full, cmap=cmap_overlay, alpha=alpha * heatmap_full, interpolation="nearest")
-    axes[2].set_title("Certified Evidence Overlay", fontsize=11, fontweight="bold", pad=8)
+    axes[2].set_title("Active Evidence Overlay", fontsize=11, fontweight="bold", pad=8)
     axes[2].axis("off")
     if show_grid and rows > 1 and cols > 1:
         for r in range(1, rows):

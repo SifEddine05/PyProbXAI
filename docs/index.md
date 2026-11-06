@@ -14,9 +14,8 @@ Given a classifier $f$ and an instance $x$ whose prediction is $c = f(x)$, a **p
 
 > *When these conditions are held fixed and all other features are allowed to vary according to an underlying distribution, the model continues to predict $c$ with high probability.*
 
-- **Error ($\text{error}$)**: The probability that the prediction changes when non-fixed features vary.
-- **Precision ($\text{precision}$)**: Defined as $1 - \text{error}$.
-- **Sparsity ($k$)**: The maximum number of literals/conditions in the explanation, guaranteeing cognitive interpretability.
+- **Error ($\varepsilon$ / $\text{error}$)**: The probability that the prediction changes when non-fixed features vary. Under the uniform distribution over Boolean features, $\varepsilon_{h,x}(S) = \mu_{h,x}(S) / 2^{d-|S|}$.
+- **Sparsity ($k$)**: The maximum number of literals/conditions in the explanation ($|S| \le k$), guaranteeing cognitive interpretability.
 
 Unlike heuristic feature attributions (e.g., LIME or standard SHAP), **PyProbXAI** provides formal probabilistic guarantees, exact model counting, or PAC guarantees depending on the model family.
 
@@ -54,7 +53,6 @@ print(exp)
 #   * marital-status = Married-civ-spouse
 #   * education-num > 12.0
 # error:     0.0412
-# precision: 0.9588
 
 # Interactive visualizations (Jupyter HTML card or standalone report):
 exp.show_tabular(x, feature_names=feature_names)

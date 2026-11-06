@@ -161,7 +161,7 @@ class BlackBoxExplainer:
     categorical_features : indices (or column names) of the categorical features, encoded as
         integer codes; all the other features are treated as numeric
     n_bins : number of quantile intervals of the numeric features
-    eta, delta : PAC parameters (precision of the estimated errors, failure probability)
+    eta, delta : PAC parameters (additive error tolerance of estimated errors, failure probability)
     cat_decoders : optional {feature index: list of category names} to print the explanations
     """
 

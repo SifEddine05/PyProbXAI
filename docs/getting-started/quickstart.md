@@ -92,8 +92,7 @@ Every explainer returns an instance of `Explanation`:
 print(exp.prediction)    # Predicted class
 print(exp.conditions)    # Human-readable condition strings
 print(exp.features)      # Indices of selected features
-print(exp.error)         # Probability of prediction flip
-print(exp.precision)     # 1 - error
+print(exp.error)         # Probability of prediction flip (epsilon)
 print(exp.size)          # Number of conditions
 ```
 
@@ -101,7 +100,7 @@ print(exp.size)          # Number of conditions
 
 ## Interactive Visualizations & Notebooks
 
-In Jupyter environments, evaluating an `Explanation` automatically renders an HTML summary card with certified precision and condition badges.
+In Jupyter environments, evaluating an `Explanation` automatically renders an HTML summary card with certified error bound ($\varepsilon \le \epsilon$) and condition badges.
 
 `PyProbXAI` also provides dedicated interactive views for different data modalities:
 

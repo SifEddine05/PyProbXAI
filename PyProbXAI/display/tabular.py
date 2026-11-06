@@ -144,7 +144,7 @@ def render_tabular_explanation_html(
                 <tr style="background:#f8fafc;border-bottom:1px solid #e2e8f0;color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;">
                     <th style="padding:10px 18px;font-weight:700;">Feature</th>
                     {val_th}
-                    <th style="padding:10px 18px;font-weight:700;">Certified Constraint</th>
+                    <th style="padding:10px 18px;font-weight:700;">Active Constraint</th>
                     <th style="padding:10px 18px;font-weight:700;text-align:right;">Status</th>
                 </tr>
             </thead>

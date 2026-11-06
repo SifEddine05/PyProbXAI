@@ -60,7 +60,6 @@ conditions:
   * capital-gain <= 7073.5
   * education-num <= 12.5
 error: 0.0156
-precision: 0.9844
 ```
 
 Notice how `DecisionTreeExplainer` computes the exact error on the orthogonal DNF representing tree branches voting for the alternative class.

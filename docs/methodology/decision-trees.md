@@ -16,15 +16,15 @@ $$\phi = \bigvee_{j=1}^m C_j \quad \text{where } C_j \land C_{j'} \equiv \bot \t
 
 ---
 
-## 2. Exact Model Counting
+## 2. Exact Model Counting and Error Function
 
-Because $\phi$ is orthogonal, model counting (determining the number of satisfying assignments) can be computed in linear time:
+Because $\phi$ is orthogonal, model counting $\mu_{h,x}(S) = M(\phi \land S)$ (determining the number of satisfying assignments) can be computed in linear time:
 
-$$M(\phi \land S) = \sum_{j=1}^m M(C_j \land S)$$
+$$\mu_{h,x}(S) = M(\phi \land S) = \sum_{j=1}^m M(C_j \land S)$$
 
-For a term $S$ of size $|S|$, under the uniform distribution on the $n$ Boolean variables, the exact error $W_f(\phi, S)$ is:
+For a term $S$ of size $|S|$, under the uniform distribution on the $n$ Boolean variables, the exact explanation error $\varepsilon_{h,x}(S)$ is:
 
-$$W_f(\phi, S) = \frac{M(\phi \land S)}{2^{n - |S|}}$$
+$$\varepsilon_{h,x}(S) = \frac{\mu_{h,x}(S)}{2^{n - |S|}} = \frac{M(\phi \land S)}{2^{n - |S|}}$$
 
 This provides the exact probability that the tree predicts an alternate class when conditions $S$ are enforced and all other Boolean conditions are varied uniformly.
 
@@ -32,7 +32,7 @@ This provides the exact probability that the tree predicts an alternate class wh
 
 ## 3. Algorithms: Greedy Descent vs. Greedy Ascent
 
-Finding the optimal subset $S \subseteq I_s$ with $|S| \le k$ that minimizes $W_f(\phi, S)$ is NP-hard. However, the error function exhibits supermodularity properties that guarantee strong approximation bounds for greedy algorithms:
+Finding the optimal subset $S \subseteq I_s$ with $|S| \le k$ that minimizes $\varepsilon_{h,x}(S)$ is NP-hard. However, the counting function $\mu_{h,x}$ exhibits supermodularity properties that guarantee strong theoretical approximation bounds for greedy algorithms:
 
 ### Greedy Descent (GD - `method="gd"`)
 - **Initialization**: Starts from the full direct reason $S = I_s$ (which has zero error).
